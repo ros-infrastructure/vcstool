@@ -17,7 +17,6 @@ windows_force_posix = \
 
 
 def fix_output_path(path):
-    global windows_force_posix
     return path.replace('\\', '/') if windows_force_posix else path
 
 
@@ -81,7 +80,6 @@ def get_ready_job(jobs):
 def execute_jobs(
     jobs, show_progress=False, number_of_workers=10, debug_jobs=False
 ):
-    global windows_force_posix
     from vcstool.streams import stdout
     if debug_jobs:
         logger.setLevel(logging.DEBUG)
