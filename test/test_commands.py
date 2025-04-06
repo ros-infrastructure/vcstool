@@ -326,8 +326,9 @@ invocation.
         expected = get_expected_output('validate_hide')
         self.assertEqual(output, expected)
 
-    @unittest.skipIf(not svn and not CI, '`svn` was not found')
-    @unittest.skipIf(not hg and not CI, '`hg` was not found')
+    @unittest.skipIf(CI, 'Cannot run on CI')
+    @unittest.skipIf(not svn, '`svn` was not found')
+    @unittest.skipIf(not hg, '`hg` was not found')
     def test_validate_svn_and_hg(self):
         output = run_command(
             'validate', ['--input', REPOS2_FILE])
