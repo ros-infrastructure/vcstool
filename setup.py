@@ -1,4 +1,5 @@
 from setuptools import find_packages, setup
+from vcstool import __version__
 
 setup(
     name='vcstool',
@@ -23,17 +24,16 @@ setup(
     maintainer_email='web@dirk-thomas.net',
     url='https://github.com/dirk-thomas/vcstool',
     download_url='http://download.ros.org/downloads/vcstool/',
-    classifiers=[
-        'Intended Audience :: Developers',
-        'License :: OSI Approved :: Apache Software License',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.10',
-        'Topic :: Software Development :: Version Control',
-        'Topic :: Utilities'
-    ],
-    description='vcstool provides a command line tool to invoke vcs commands on multiple repositories.',
-    long_description=open('README.md').read(),
-    long_description_content_type='text/markdown',
+    classifiers=['Intended Audience :: Developers',
+                 'License :: OSI Approved :: Apache Software License',
+                 'Programming Language :: Python',
+                 'Topic :: Software Development :: Version Control',
+                 'Topic :: Utilities'],
+    description='vcstool provides a command line tool to invoke vcs commands '
+        'on multiple repositories.',
+    long_description='\
+vcstool enables batch commands on multiple different vcs repositories. \
+Currently it supports git, hg, svn and bzr.',
     license='Apache License, Version 2.0',
     data_files=[
         ('share/vcstool-completion', [
