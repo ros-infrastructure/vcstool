@@ -10,11 +10,11 @@ setup(
         'setuptools'],
     extras_require={
         'test': [
-            'flake8 >= 3.7, < 5',
+            'flake8',
             'flake8-docstrings',
             'flake8-import-order',
-            'pycodestyle < 2.9.0',
-            'pyflakes < 2.5.0',
+            'pycodestyle',
+            'pyflakes',
             'pytest']
         },
     packages=find_packages(),

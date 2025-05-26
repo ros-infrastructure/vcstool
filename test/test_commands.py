@@ -326,8 +326,9 @@ invocation.
         expected = get_expected_output('validate_hide')
         self.assertEqual(output, expected)
 
-    @unittest.skipIf(not svn and not CI, '`svn` was not found')
-    @unittest.skipIf(not hg and not CI, '`hg` was not found')
+    @unittest.skipIf(CI, 'Cannot run on CI')
+    @unittest.skipIf(not svn, '`svn` was not found')
+    @unittest.skipIf(not hg, '`hg` was not found')
     def test_validate_svn_and_hg(self):
         output = run_command(
             'validate', ['--input', REPOS2_FILE])
@@ -369,7 +370,7 @@ def run_command(command, args=None, subfolder=None):
 
 
 def adapt_command_output(output, cwd=None):
-    assert type(output) == bytes
+    assert isinstance(output, bytes)
     # replace message from older git versions
     output = output.replace(
         b'git checkout -b new_branch_name',

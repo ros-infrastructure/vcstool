@@ -2,7 +2,6 @@ import logging
 import os
 
 from flake8 import configure_logging
-from flake8.api.legacy import StyleGuide
 from flake8.main.application import Application
 from pydocstyle.config import log
 
@@ -15,8 +14,8 @@ def test_flake8():
         '--extend-ignore=' + ','.join([
             'A003', 'D100', 'D101', 'D102', 'D103', 'D104', 'D105', 'D107']),
         '--exclude', 'vcstool/compat/shutil.py',
-        '--import-order-style=google']
-    style_guide = get_style_guide(argv)
+        '--import-order-style=google'
+    ]
     base_path = os.path.join(os.path.dirname(__file__), '..')
     paths = [
         os.path.join(base_path, 'setup.py'),
@@ -28,38 +27,11 @@ def test_flake8():
         if script.startswith('.'):
             continue
         paths.append(os.path.join(scripts_path, script))
-    report = style_guide.check_files(paths)
-    assert report.total_errors == 0, \
-        'Found %d code style warnings' % report.total_errors
 
-
-def get_style_guide(argv=None):
-    # this is a fork of flake8.api.legacy.get_style_guide
-    # to allow passing command line argument
-    application = Application()
-    if hasattr(application, 'parse_preliminary_options'):
-        prelim_opts, remaining_args = application.parse_preliminary_options(
-            argv)
-        from flake8 import configure_logging
-        configure_logging(prelim_opts.verbose, prelim_opts.output_file)
-        from flake8.options import config
-        config_finder = config.ConfigFileFinder(
-            application.program, prelim_opts.append_config,
-            config_file=prelim_opts.config,
-            ignore_config_files=prelim_opts.isolated)
-        application.find_plugins(config_finder)
-        application.register_plugin_options()
-        application.parse_configuration_and_cli(config_finder, remaining_args)
-    else:
-        application.parse_preliminary_options_and_args([])
-        application.make_config_finder()
-        application.find_plugins()
-        application.register_plugin_options()
-        application.parse_configuration_and_cli(argv)
-    application.make_formatter()
-    application.make_guide()
-    application.make_file_checker_manager()
-    return StyleGuide(application)
+    app = Application()
+    app.run(argv + paths)
+    assert app.result_count == 0, \
+        f'Found {app.result_count} code style warnings'
 
 
 if __name__ == '__main__':
