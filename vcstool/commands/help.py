@@ -1,7 +1,11 @@
 import argparse
 import sys
 
-from pkg_resources import load_entry_point
+try:
+    from importlib.metadata import entry_points
+except ImportError:  # Python < 3.8
+    from importlib_metadata import entry_points
+
 from vcstool.clients import vcstool_clients
 from vcstool.commands import vcstool_commands
 from vcstool.streams import set_streams
@@ -86,8 +90,19 @@ def get_entrypoint(command):
                 file=sys.stderr)
         return None
 
-    return load_entry_point(
-        'vcstool', 'console_scripts', 'vcs-' + commands[0])
+    eps = entry_points()
+    ep_name = 'vcs-' + commands[0]
+
+    if hasattr(eps, 'select'):  # Python 3.10+
+        entry_point = next(iter(
+            eps.select(group='console_scripts', name=ep_name)))
+        if entry_point:
+            return entry_point.load()
+    else:  # Python < 3.10
+        for ep in eps.get('console_scripts', []):
+            if ep.name == ep_name:
+                return ep.load()
+    return None
 
 
 def get_parser_with_command_only():
