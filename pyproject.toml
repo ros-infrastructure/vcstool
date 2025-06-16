@@ -1,0 +1,79 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vcstool"
+dynamic = ["version"]
+dependencies = [
+    "PyYAML",
+]
+requires-python = ">= 3.7"
+authors = [
+    {name = "Dirk Thomas", email = "web@dirk-thomas.net"},
+]
+maintainers = [
+    {name = "ROS Infrastructure Team", email = "ros@osrfoundation.org"},
+]
+description = "vcstool provides a command line tool to invoke vcs commands on multiple repositories."
+readme = "README.md"
+license = "	Apache-2.0"
+license-files = ["LICENSE"]
+keywords = [
+    "vcs",
+    "git",
+    "hg",
+    "bzr",
+    "svn",
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python",
+    "Topic :: Software Development :: Version Control",
+    "Topic :: Utilities",
+]
+
+[project.optional-dependencies]
+test = [
+    "flake8",
+    "flake8-docstrings",
+    "flake8-import-order",
+    "pycodestyle",
+    "pyflakes",
+    "pytest",
+]
+
+[project.urls]
+Repository = "https://github.com/ros-infrastructure/vcstool"
+Download = "http://download.ros.org/downloads/vcstool/"
+
+[project.scripts]
+vcs = "vcstool.commands.vcs:main"
+vcs-branch = "vcstool.commands.branch:main"
+vcs-bzr = "vcstool.commands.custom:bzr_main"
+vcs-custom = "vcstool.commands.custom:main"
+vcs-diff = "vcstool.commands.diff:main"
+vcs-export = "vcstool.commands.export:main"
+vcs-git = "vcstool.commands.custom:git_main"
+vcs-help = "vcstool.commands.help:main"
+vcs-hg = "vcstool.commands.custom:hg_main"
+vcs-import = "vcstool.commands.import_:main"
+vcs-log = "vcstool.commands.log:main"
+vcs-pull = "vcstool.commands.pull:main"
+vcs-push = "vcstool.commands.push:main"
+vcs-remotes = "vcstool.commands.remotes:main"
+vcs-status = "vcstool.commands.status:main"
+vcs-svn = "vcstool.commands.custom:svn_main"
+vcs-validate = "vcstool.commands.validate:main"
+
+[tool.setuptools.dynamic]
+version = {attr = "vcstool.__version__"}
+
+[tool.setuptools.data-files]
+"share/vcstool-completion" = [
+    "vcstool-completion/vcs.bash",
+    "vcstool-completion/vcs.tcsh",
+    "vcstool-completion/vcs.zsh",
+    "vcstool-completion/vcs.fish"
+]
