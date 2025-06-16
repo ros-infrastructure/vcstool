@@ -1,10 +1,18 @@
 import argparse
 import sys
 
-from pkg_resources import load_entry_point
 from vcstool.clients import vcstool_clients
 from vcstool.commands import vcstool_commands
+from vcstool.errors import UnsupportedPythonVersionError
 from vcstool.streams import set_streams
+
+
+if sys.version_info >= (3, 8):
+    from importlib.metadata import entry_points
+elif sys.version_info >= (3, 7):
+    from importlib_metadata import entry_points
+else:
+    raise UnsupportedPythonVersionError()
 
 
 def main(args=None, stdout=None, stderr=None):
@@ -86,8 +94,23 @@ def get_entrypoint(command):
                 file=sys.stderr)
         return None
 
-    return load_entry_point(
-        'vcstool', 'console_scripts', 'vcs-' + commands[0])
+    eps = entry_points()
+    ep_name = 'vcs-' + commands[0]
+
+    if sys.version_info >= (3, 10):
+        entry_point = next(iter(
+            eps.select(group='console_scripts', name=ep_name)))
+        if entry_point:
+            return entry_point.load()
+
+    elif sys.version_info >= (3, 7):
+        for ep in eps.get('console_scripts', []):
+            if ep.name == ep_name:
+                return ep.load()
+    else:
+        raise UnsupportedPythonVersionError()
+
+    return None
 
 
 def get_parser_with_command_only():
