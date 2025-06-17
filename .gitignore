@@ -3,3 +3,6 @@ build
 deb_dist
 dist
 vcstool.egg-info
+.pytest_cache
+__pycache__
+venv
