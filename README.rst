@@ -1,7 +1,11 @@
-What is vcstool?
+What is vcs2l?
 ================
 
-Vcstool is a version control system (VCS) tool, designed to make working with multiple repositories easier.
+Vcs2l is a fork of Dirk Thomas's [vcstool](https://github.com/dirk-thomas/vcstool) which is a version control system (VCS) tool, designed to make working with multiple repositories easier.
+This fork is created to continue the development of vcstool, as it is no longer actively maintained.
+
+The commands provided by vcs2l have the same naming structure as the original fork, so it can be used as a drop-in replacement.
+Therefore, the repository is renamed to `vcs2l` while maintaining the command names to `vcstool` to ensure compatibility with existing scripts and workflows.
 
 Note:
   This tool should not be confused with `vcstools <https://github.com/vcstools/vcstools/>`_ (with a trailing ``s``) which provides a Python API for interacting with different version control systems.
@@ -11,26 +15,26 @@ Note:
   * The file format of ``vcstool export`` uses the relative paths of the repositories as keys in YAML which avoids collisions by design.
   * ``vcstool`` has significantly fewer lines of code than ``vcstools`` including the command line tools built on top.
 
-Python 2.7 / <= 3.4 support
+Python 3.7+ support
 ---------------------------
 
-The latest version supporting Python 2.7 and Python <= 3.4 is 0.2.x from the `0.2.x branch <https://github.com/dirk-thomas/vcstool/tree/0.2.x>`_.
+The latest version supports Python 3.7 and newer.
 
 
 How does it work?
 -----------------
 
-Vcstool operates on any folder from where it recursively searches for supported repositories.
-On these repositories vcstool invokes the native VCS client with the requested command (i.e. *diff*).
+Vcs2l operates on any folder from where it recursively searches for supported repositories.
+On these repositories vcs2l invokes the native VCS client with the requested command (i.e. *diff*).
 
 
 Which VCS types are supported?
 ------------------------------
 
-Vcstool supports `Git <http://git-scm.com>`_, `Mercurial <http://git-scm.comhttp://mercurial.selenic.com>`_, `Subversion <http://subversion.apache.org>`_, `Bazaar <http://bazaar.canonical.com/en/>`_.
+Vcs2l supports `Git <http://git-scm.com>`_, `Mercurial <https://www.mercurial-scm.org/>`_, `Subversion <http://subversion.apache.org>`_, `Bazaar <http://bazaar.canonical.com/en/>`_.
 
 
-How to use vcstool?
+How to use vcs2l?
 -------------------
 
 The script ``vcs`` can be used similarly to the VCS clients ``git``, ``hg`` etc.
@@ -38,7 +42,7 @@ The ``help`` command provides a list of available commands with an additional de
 
   vcs help
 
-By default vcstool searches for repositories under the current folder.
+By default vcs2l searches for repositories under the current folder.
 Optionally one path (or multiple paths) can be passed to search for repositories at different locations::
 
   vcs status /path/to/several/repos /path/to/other/repos /path/to/single/repo
@@ -47,20 +51,20 @@ Optionally one path (or multiple paths) can be passed to search for repositories
 Exporting and importing sets of repositories
 --------------------------------------------
 
-Vcstool can export and import all the information required to reproduce the versions of a set of repositories.
-Vcstool uses a simple `YAML <http://www.yaml.org/>`_ format to encode this information.
+Vcs2l can export and import all the information required to reproduce the versions of a set of repositories.
+Vcs2l uses a simple `YAML <http://www.yaml.org/>`_ format to encode this information.
 This format includes a root key ``repositories`` under which each local repository is described by a dictionary keyed by its relative path.
 Each of these dictionaries contains keys ``type``, ``url``, and ``version``.
 If the ``version`` key is omitted the default branch is being used.
 
-This results in something similar to the following for a set of two repositories (`vcstool <https://github.com/dirk-thomas/vcstool>`_ cloned via Git and `rosinstall <http://github.com/vcstools/rosinstall>`_ checked out via Subversion):
+This results in something similar to the following for a set of two repositories (`vcs2l <https://github.com/ros-infrastructure/vcs2l>`_ cloned via Git and `rosinstall <http://github.com/vcstools/rosinstall>`_ checked out via Subversion):
 
 .. code-block:: yaml
 
   repositories:
-    vcstool:
+    vcs2l:
       type: git
-      url: git@github.com:dirk-thomas/vcstool.git
+      url: git@github.com:ros-infrastructure/vcs2l.git
       version: master
     old_tools/rosinstall:
       type: svn
@@ -96,7 +100,7 @@ Usually the data of a previously exported file is piped in::
 The ``import`` command also supports input in the `rosinstall file format <http://www.ros.org/doc/independent/api/rosinstall/html/rosinstall_file_format.html>`_.
 Beside passing a file path the command also supports passing a URL.
 
-Only for this command vcstool supports the pseudo clients ``tar`` and ``zip`` which fetch a tarball / zipfile from a URL and unpack its content.
+Only for this command vcs2l supports the pseudo clients ``tar`` and ``zip`` which fetch a tarball / zipfile from a URL and unpack its content.
 For those two types the ``version`` key is optional.
 If specified only entries from the archive which are in the subfolder specified by the version value are being extracted.
 
@@ -145,10 +149,10 @@ The set of repositories to operate on can optionally be restricted by the type:
 If the command should work on multiple repositories make sure to pass only generic arguments which work for all of these repository types.
 
 
-How to install vcstool?
+How to install vcs2l?
 =======================
 
-On Debian-based platforms the recommended method is to install the package *python3-vcstool*.
+On Debian-based platforms the recommended method is to install the package *python3-vcs2l*.
 On Ubuntu this is done using *apt-get*:
 
 If you are using `ROS <https://www.ros.org/>`_ you can get the package directly from the ROS repository::
@@ -157,27 +161,17 @@ If you are using `ROS <https://www.ros.org/>`_ you can get the package directly 
   sudo apt install curl # if you haven't already installed curl
   curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo apt-key add -
   sudo apt-get update
-  sudo apt-get install python3-vcstool
+  sudo apt-get install python3-vcs2l
 
-If you are not using ROS or if you want the latest release as soon as possible you can get the package from |packagecloud.io|::
+On other systems, use the `PyPI <https://pypi.org/project/vcs2l/>`_ package::
 
-  curl -s https://packagecloud.io/install/repositories/dirk-thomas/vcstool/script.deb.sh | sudo bash
-  sudo apt-get update
-  sudo apt-get install python3-vcstool
-
-.. |packagecloud.io| image:: https://img.shields.io/badge/deb-packagecloud.io-844fec.svg
-  :target: https://packagecloud.io/dirk-thomas/vcstool
-  :alt: packagecloud.io
-
-On other systems, use the `PyPI <http://pypi.python.org>`_ package::
-
-  sudo pip install vcstool
+  pip3 install vcs2l
 
 
 Setup auto-completion
 ---------------------
 
-For the shells *bash*, *tcsh* and *zsh* vcstool can provide auto-completion of the various VCS commands.
+For the shells *bash*, *tcsh* and *zsh* vcs2l can provide auto-completion of the various VCS commands.
 In order to enable that feature the shell specific completion file must be sourced.
 
 For *bash* append the following line to the ``~/.bashrc`` file::
@@ -203,16 +197,16 @@ How to report problems?
 -----------------------
 
 Before reporting a problem please make sure to use the latest version.
-Issues can be filled on `GitHub <https://github.com/dirk-thomas/vcstool/issues>`_ after making sure that this problem has not yet been reported.
+Issues can be filled on `GitHub <https://github.com/ros-infrastructure/vcs2l/issues>`_ after making sure that this problem has not yet been reported.
 
-Please make sure to include as much information, i.e. version numbers from vcstool, operating system, Python and a reproducible example of the commands which expose the problem.
+Please make sure to include as much information, i.e. version numbers from vcs2l, operating system, Python and a reproducible example of the commands which expose the problem.
 
 
 How to try the latest changes?
 ------------------------------
 
 Sourcing the ``setup.sh`` file prepends the ``src`` folder to the ``PYTHONPATH`` and the ``scripts`` folder to the ``PATH``.
-Then vcstool can be used with the commands ``vcs-COMMAND`` (note the hyphen between ``vcs`` and ``command`` instead of a space).
+Then vcs2l can be used with the commands ``vcs-COMMAND`` (note the hyphen between ``vcs`` and ``command`` instead of a space).
 
 Alternatively the ``-e/--editable`` flag of ``pip`` can be used::
 
