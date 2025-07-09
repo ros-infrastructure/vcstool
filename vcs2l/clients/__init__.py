@@ -1,42 +1,42 @@
-vcstool_clients = []
+vcs2l_clients = []
 
 try:
     from .bzr import BzrClient
-    vcstool_clients.append(BzrClient)
+    vcs2l_clients.append(BzrClient)
 except ImportError:
     pass
 
 try:
     from .git import GitClient
-    vcstool_clients.append(GitClient)
+    vcs2l_clients.append(GitClient)
 except ImportError:
     pass
 
 try:
     from .hg import HgClient
-    vcstool_clients.append(HgClient)
+    vcs2l_clients.append(HgClient)
 except ImportError:
     pass
 
 try:
     from .svn import SvnClient
-    vcstool_clients.append(SvnClient)
+    vcs2l_clients.append(SvnClient)
 except ImportError:
     pass
 
 try:
     from .tar import TarClient
-    vcstool_clients.append(TarClient)
+    vcs2l_clients.append(TarClient)
 except ImportError:
     pass
 
 try:
     from .zip import ZipClient
-    vcstool_clients.append(ZipClient)
+    vcs2l_clients.append(ZipClient)
 except ImportError:
     pass
 
-_client_types = [c.type for c in vcstool_clients]
+_client_types = [c.type for c in vcs2l_clients]
 if len(_client_types) != len(set(_client_types)):
     raise RuntimeError(
         'Multiple vcs clients share the same type: ' +

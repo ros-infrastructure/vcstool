@@ -4,7 +4,7 @@ import os
 
 from setuptools import find_packages
 from setuptools import setup
-from vcstool import __version__
+from vcs2l import __version__
 
 with open(
     os.path.join(os.path.dirname(__file__), 'README.rst'),
@@ -60,23 +60,23 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'vcs = vcstool.commands.vcs:main',
-            'vcs-branch = vcstool.commands.branch:main',
-            'vcs-bzr = vcstool.commands.custom:bzr_main',
-            'vcs-custom = vcstool.commands.custom:main',
-            'vcs-diff = vcstool.commands.diff:main',
-            'vcs-export = vcstool.commands.export:main',
-            'vcs-git = vcstool.commands.custom:git_main',
-            'vcs-help = vcstool.commands.help:main',
-            'vcs-hg = vcstool.commands.custom:hg_main',
-            'vcs-import = vcstool.commands.import_:main',
-            'vcs-log = vcstool.commands.log:main',
-            'vcs-pull = vcstool.commands.pull:main',
-            'vcs-push = vcstool.commands.push:main',
-            'vcs-remotes = vcstool.commands.remotes:main',
-            'vcs-status = vcstool.commands.status:main',
-            'vcs-svn = vcstool.commands.custom:svn_main',
-            'vcs-validate = vcstool.commands.validate:main',
+            'vcs = vcs2l.commands.vcs:main',
+            'vcs-branch = vcs2l.commands.branch:main',
+            'vcs-bzr = vcs2l.commands.custom:bzr_main',
+            'vcs-custom = vcs2l.commands.custom:main',
+            'vcs-diff = vcs2l.commands.diff:main',
+            'vcs-export = vcs2l.commands.export:main',
+            'vcs-git = vcs2l.commands.custom:git_main',
+            'vcs-help = vcs2l.commands.help:main',
+            'vcs-hg = vcs2l.commands.custom:hg_main',
+            'vcs-import = vcs2l.commands.import_:main',
+            'vcs-log = vcs2l.commands.log:main',
+            'vcs-pull = vcs2l.commands.pull:main',
+            'vcs-push = vcs2l.commands.push:main',
+            'vcs-remotes = vcs2l.commands.remotes:main',
+            'vcs-status = vcs2l.commands.status:main',
+            'vcs-svn = vcs2l.commands.custom:svn_main',
+            'vcs-validate = vcs2l.commands.validate:main',
         ]
     }
 )

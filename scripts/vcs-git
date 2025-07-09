@@ -2,6 +2,6 @@
 
 import sys
 
-from vcstool.commands.custom import git_main
+from vcs2l.commands.custom import git_main
 
 sys.exit(git_main() or 0)
