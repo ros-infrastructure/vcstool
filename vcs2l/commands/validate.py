@@ -1,12 +1,12 @@
 import argparse
 import sys
 
-from vcstool.clients import vcstool_clients
-from vcstool.commands.import_ import get_repositories
-from vcstool.executor import ansi
-from vcstool.executor import execute_jobs
-from vcstool.executor import output_results
-from vcstool.streams import set_streams
+from vcs2l.clients import vcs2l_clients
+from vcs2l.commands.import_ import get_repositories
+from vcs2l.executor import ansi
+from vcs2l.executor import execute_jobs
+from vcs2l.executor import output_results
+from vcs2l.streams import set_streams
 
 from .command import add_common_arguments
 from .command import Command
@@ -39,9 +39,9 @@ def get_parser():
 def generate_jobs(repos, args):
     jobs = []
     for path, repo in repos.items():
-        clients = [c for c in vcstool_clients if c.type == repo['type']]
+        clients = [c for c in vcs2l_clients if c.type == repo['type']]
         if not clients:
-            from vcstool.clients.none import NoneClient
+            from vcs2l.clients.none import NoneClient
             job = {
                 'client': NoneClient(path),
                 'command': None,

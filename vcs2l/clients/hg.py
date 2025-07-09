@@ -2,7 +2,7 @@ import os
 from shutil import which
 from threading import Lock
 
-from vcstool.executor import USE_COLOR
+from vcs2l.executor import USE_COLOR
 
 from .vcs_base import VcsClientBase
 from ..util import rmtree

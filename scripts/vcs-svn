@@ -2,6 +2,6 @@
 
 import sys
 
-from vcstool.commands.custom import svn_main
+from vcs2l.commands.custom import svn_main
 
 sys.exit(svn_main() or 0)

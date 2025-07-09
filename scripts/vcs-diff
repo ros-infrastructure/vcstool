@@ -2,6 +2,6 @@
 
 import sys
 
-from vcstool.commands.diff import main
+from vcs2l.commands.diff import main
 
 sys.exit(main() or 0)
