@@ -1,4 +1,4 @@
-name: vcstool
+name: vcs2l
 
 on:
   push:
