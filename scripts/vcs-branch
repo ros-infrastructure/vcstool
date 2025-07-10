@@ -2,6 +2,6 @@
 
 import sys
 
-from vcstool.commands.branch import main
+from vcs2l.commands.branch import main
 
 sys.exit(main() or 0)

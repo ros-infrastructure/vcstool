@@ -10,20 +10,20 @@ from .remotes import RemotesCommand
 from .status import StatusCommand
 from .validate import ValidateCommand
 
-vcstool_commands = []
-vcstool_commands.append(BranchCommand)
-vcstool_commands.append(CustomCommand)
-vcstool_commands.append(DiffCommand)
-vcstool_commands.append(ExportCommand)
-vcstool_commands.append(ImportCommand)
-vcstool_commands.append(LogCommand)
-vcstool_commands.append(PullCommand)
-vcstool_commands.append(PushCommand)
-vcstool_commands.append(RemotesCommand)
-vcstool_commands.append(StatusCommand)
-vcstool_commands.append(ValidateCommand)
+vcs2l_commands = []
+vcs2l_commands.append(BranchCommand)
+vcs2l_commands.append(CustomCommand)
+vcs2l_commands.append(DiffCommand)
+vcs2l_commands.append(ExportCommand)
+vcs2l_commands.append(ImportCommand)
+vcs2l_commands.append(LogCommand)
+vcs2l_commands.append(PullCommand)
+vcs2l_commands.append(PushCommand)
+vcs2l_commands.append(RemotesCommand)
+vcs2l_commands.append(StatusCommand)
+vcs2l_commands.append(ValidateCommand)
 
-_commands = [c.command for c in vcstool_commands]
+_commands = [c.command for c in vcs2l_commands]
 if len(_commands) != len(set(_commands)):
     raise RuntimeError(
         'Multiple commands share the same command name: ' +

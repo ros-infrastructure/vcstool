@@ -2,6 +2,6 @@
 
 import sys
 
-from vcstool.commands.custom import hg_main
+from vcs2l.commands.custom import hg_main
 
 sys.exit(hg_main() or 0)
