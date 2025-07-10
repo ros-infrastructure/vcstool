@@ -13,14 +13,14 @@ def test_flake8():
     argv = [
         '--extend-ignore=' + ','.join([
             'A003', 'D100', 'D101', 'D102', 'D103', 'D104', 'D105', 'D107']),
-        '--exclude', 'vcstool/compat/shutil.py',
+        '--exclude', 'vcs2l/compat/shutil.py',
         '--import-order-style=google'
     ]
     base_path = os.path.join(os.path.dirname(__file__), '..')
     paths = [
         os.path.join(base_path, 'setup.py'),
         os.path.join(base_path, 'test'),
-        os.path.join(base_path, 'vcstool'),
+        os.path.join(base_path, 'vcs2l'),
     ]
     scripts_path = os.path.join(base_path, 'scripts')
     for script in os.listdir(scripts_path):

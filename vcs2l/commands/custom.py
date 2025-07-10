@@ -1,13 +1,13 @@
 import argparse
 import sys
 
-from vcstool.clients import vcstool_clients
-from vcstool.crawler import find_repositories
-from vcstool.executor import execute_jobs
-from vcstool.executor import generate_jobs
-from vcstool.executor import output_repositories
-from vcstool.executor import output_results
-from vcstool.streams import set_streams
+from vcs2l.clients import vcs2l_clients
+from vcs2l.crawler import find_repositories
+from vcs2l.executor import execute_jobs
+from vcs2l.executor import generate_jobs
+from vcs2l.executor import output_repositories
+from vcs2l.executor import output_results
+from vcs2l.streams import set_streams
 
 from .command import add_common_arguments
 from .command import Command
@@ -29,7 +29,7 @@ def get_parser():
     group = parser.add_argument_group(
         '"custom" command parameters restricting the repositories')
     for client_type in [
-        c.type for c in vcstool_clients if c.type not in ['tar']
+        c.type for c in vcs2l_clients if c.type not in ['tar']
     ]:
         group.add_argument(
             '--' + client_type, action='store_true', default=False,
@@ -63,13 +63,13 @@ def main(args=None, stdout=None, stderr=None):
 
     # check if any client type is specified
     any_client_type = False
-    for client in vcstool_clients:
+    for client in vcs2l_clients:
         if client.type in args and args.__dict__[client.type]:
             any_client_type = True
             break
     # if no client type is specified enable all client types
     if not any_client_type:
-        for client in vcstool_clients:
+        for client in vcs2l_clients:
             if client.type in args:
                 args.__dict__[client.type] = True
 

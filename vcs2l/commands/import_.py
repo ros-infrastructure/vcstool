@@ -4,14 +4,14 @@ from shutil import which
 import sys
 import urllib.request as request
 
-from vcstool import __version__ as vcstool_version
-from vcstool.clients import vcstool_clients
-from vcstool.clients.vcs_base import run_command
-from vcstool.executor import ansi
-from vcstool.executor import execute_jobs
-from vcstool.executor import output_repositories
-from vcstool.executor import output_results
-from vcstool.streams import set_streams
+from vcs2l import __version__ as vcs2l_version
+from vcs2l.clients import vcs2l_clients
+from vcs2l.clients.vcs_base import run_command
+from vcs2l.executor import ansi
+from vcs2l.executor import execute_jobs
+from vcs2l.executor import output_repositories
+from vcs2l.executor import output_results
+from vcs2l.streams import set_streams
 import yaml
 
 from .command import add_common_arguments
@@ -70,7 +70,7 @@ def file_or_url_type(value):
     # use another user agent to avoid getting a 403 (forbidden) error,
     # since some websites blacklist or block unrecognized user agents
     return request.Request(
-        value, headers={'User-Agent': 'vcstool/' + vcstool_version})
+        value, headers={'User-Agent': 'vcs2l/' + vcs2l_version})
 
 
 def get_repositories(yaml_file):
@@ -81,7 +81,7 @@ def get_repositories(yaml_file):
 
     try:
         repositories = root['repositories']
-        return get_repos_in_vcstool_format(repositories)
+        return get_repos_in_vcs2l_format(repositories)
     except KeyError as e:
         raise RuntimeError('Input data is not valid format: %s' % e)
     except TypeError as e:
@@ -92,7 +92,7 @@ def get_repositories(yaml_file):
             raise RuntimeError('Input data is not valid format: %s' % e)
 
 
-def get_repos_in_vcstool_format(repositories):
+def get_repos_in_vcs2l_format(repositories):
     repos = {}
     if repositories is None:
         print(
@@ -153,9 +153,9 @@ def generate_jobs(repos, args):
     jobs = []
     for path, repo in repos.items():
         path = os.path.join(args.path, path)
-        clients = [c for c in vcstool_clients if c.type == repo['type']]
+        clients = [c for c in vcs2l_clients if c.type == repo['type']]
         if not clients:
-            from vcstool.clients.none import NoneClient
+            from vcs2l.clients.none import NoneClient
             job = {
                 'client': NoneClient(path),
                 'command': None,

@@ -6,8 +6,8 @@ import unittest
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
-from vcstool.clients.git import GitClient  # noqa: E402
-from vcstool.util import rmtree  # noqa: E402
+from vcs2l.clients.git import GitClient  # noqa: E402
+from vcs2l.util import rmtree  # noqa: E402
 
 file_uri_scheme = 'file://' if sys.platform != 'win32' else 'file:///'
 
@@ -138,7 +138,7 @@ invocation.
 
     def test_pull_api(self):
         from io import StringIO
-        from vcstool.commands.pull import main
+        from vcs2l.commands.pull import main
         stdout_stderr = StringIO()
 
         # change and restore cwd
@@ -146,7 +146,7 @@ invocation.
         os.chdir(TEST_WORKSPACE)
         try:
             # change and restore USE_COLOR flag
-            from vcstool import executor
+            from vcs2l import executor
             use_color_bck = executor.USE_COLOR
             executor.USE_COLOR = False
             try:
@@ -200,10 +200,10 @@ invocation.
         assert output == expected
 
     def test_reimport(self):
-        cwd_vcstool = os.path.join(TEST_WORKSPACE, 'vcstool')
+        cwd_vcs2l = os.path.join(TEST_WORKSPACE, 'vcs2l')
         subprocess.check_output(
             ['git', 'remote', 'add', 'foo', 'http://foo.com/bar.git'],
-            stderr=subprocess.STDOUT, cwd=cwd_vcstool)
+            stderr=subprocess.STDOUT, cwd=cwd_vcs2l)
         cwd_without_version = os.path.join(TEST_WORKSPACE, 'without_version')
         subprocess.check_output(
             ['git', 'checkout', '-b', 'foo'],
@@ -234,7 +234,7 @@ invocation.
 
         subprocess.check_output(
             ['git', 'remote', 'remove', 'foo'],
-            stderr=subprocess.STDOUT, cwd=cwd_vcstool)
+            stderr=subprocess.STDOUT, cwd=cwd_vcs2l)
 
     def test_reimport_failed(self):
         cwd_tag = os.path.join(TEST_WORKSPACE, 'immutable', 'tag')
@@ -253,12 +253,12 @@ invocation.
                 stderr=subprocess.STDOUT, cwd=cwd_tag)
             subprocess.check_output(
                 ['git', 'remote', 'add', 'origin',
-                 'https://github.com/dirk-thomas/vcstool.git'],
+                 'https://github.com/ros-infrastructure/vcs2l.git'],
                 stderr=subprocess.STDOUT, cwd=cwd_tag)
 
     def test_import_force_non_empty(self):
         workdir = os.path.join(TEST_WORKSPACE, 'force-non-empty')
-        os.makedirs(os.path.join(workdir, 'vcstool', 'not-a-git-repo'))
+        os.makedirs(os.path.join(workdir, 'vcs2l', 'not-a-git-repo'))
         try:
             output = run_command(
                 'import', ['--force', '--input', REPOS_FILE, '.'],
@@ -291,7 +291,7 @@ invocation.
             # check that repository history has only one commit
             output = subprocess.check_output(
                 ['git', 'log', '--format=oneline'],
-                stderr=subprocess.STDOUT, cwd=os.path.join(workdir, 'vcstool'))
+                stderr=subprocess.STDOUT, cwd=os.path.join(workdir, 'vcs2l'))
             assert len(output.splitlines()) == 1
         finally:
             rmtree(workdir)
@@ -415,7 +415,7 @@ def adapt_command_output(output, cwd=None):
         # this is less likely to cause wrong test results
         paths_to_replace = [
             (b'.\\immutable', b'./immutable'),
-            (b'.\\vcstool', b'./vcstool'),
+            (b'.\\vcs2l', b'./vcs2l'),
             (b'.\\without_version', b'./without_version'),
             (b'\\hash', b'/hash'),
             (b'\\tag', b'/tag'),

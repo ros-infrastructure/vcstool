@@ -1,6 +1,6 @@
 .PHONY: all setup clean_dist distro clean install
 
-NAME=vcstool
+NAME=vcs2l
 VERSION=`./setup.py --version`
 
 all:
@@ -12,7 +12,7 @@ setup:
 clean_dist:
 	-rm -rf deb_dist
 	-rm -rf dist
-	-rm -rf vcstool.egg-info
+	-rm -rf vcs2l.egg-info
 
 distro: setup clean_dist
 	python setup.py sdist

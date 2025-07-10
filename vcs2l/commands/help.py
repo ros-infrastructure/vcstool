@@ -1,10 +1,10 @@
 import argparse
 import sys
 
-from vcstool.clients import vcstool_clients
-from vcstool.commands import vcstool_commands
-from vcstool.errors import UnsupportedPythonVersionError
-from vcstool.streams import set_streams
+from vcs2l.clients import vcs2l_clients
+from vcs2l.commands import vcs2l_commands
+from vcs2l.errors import UnsupportedPythonVersionError
+from vcs2l.streams import set_streams
 
 
 if sys.version_info >= (3, 8):
@@ -36,17 +36,17 @@ def main(args=None, stdout=None, stderr=None):
 
     if ns.clients:
         print('The available VCS clients are:')
-        for client in vcstool_clients:
+        for client in vcs2l_clients:
             print('  ' + client.type)
         return 0
 
     if ns.commands:
-        print(' '.join([cmd.command for cmd in vcstool_commands]))
+        print(' '.join([cmd.command for cmd in vcs2l_commands]))
         return 0
 
     if ns.commands_descriptions:
         print('\n'.join(['{}\t{}'.format(cmd.command, cmd.help)
-                         for cmd in vcstool_commands]))
+                         for cmd in vcs2l_commands]))
         return 0
 
     # output detailed command list
@@ -63,7 +63,7 @@ def get_parser(add_help=True):
     group.add_argument(
         'command', metavar='<command>', nargs='?',
         help='The available commands: ' + ', '.join(
-            [cmd.command for cmd in vcstool_commands]))
+            [cmd.command for cmd in vcs2l_commands]))
     group.add_argument(
         '--clients', action='store_true', default=False,
         help='Show the available VCS clients')
@@ -73,16 +73,16 @@ def get_parser(add_help=True):
     group.add_argument(
         '--commands-descriptions', action='store_true', default=False,
         help='Output the available commands along with their descriptions')
-    from vcstool import __version__
+    from vcs2l import __version__
     group.add_argument(
         '--version', action='version', version='%(prog)s ' + __version__,
-        help='Show the vcstool version')
+        help='Show the vcs2l version')
     return parser
 
 
 def get_entrypoint(command):
     # accept command with same prefix if unique
-    commands = [cmd.command for cmd in vcstool_commands]
+    commands = [cmd.command for cmd in vcs2l_commands]
     commands = [cmd for cmd in commands if cmd.startswith(command)]
     if len(commands) != 1:
         print(
@@ -119,7 +119,7 @@ def get_parser_with_command_only():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         description='%s\n\n%s' % (
             _get_description(),
-            '\n'.join(_get_command_help(vcstool_commands))),
+            '\n'.join(_get_command_help(vcs2l_commands))),
         epilog=_get_epilog(), add_help=False)
     parser.add_argument('command', help=argparse.SUPPRESS)
     return parser
@@ -141,7 +141,7 @@ def _get_epilog():
 def _get_command_help(commands):
     lines = ['The available commands are:']
     max_len = max(len(cmd.command) for cmd in commands)
-    for cmd in vcstool_commands:
+    for cmd in vcs2l_commands:
         lines.append(
             '   %s%s   %s' %
             (cmd.command, ' ' * (max_len - len(cmd.command)), cmd.help))
