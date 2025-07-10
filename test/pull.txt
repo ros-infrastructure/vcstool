@@ -11,7 +11,7 @@ Please specify which branch you want to merge with.
 See git-pull(1) for details.
 
     git pull <remote> <branch>
-=== ./vcstool (git) ===
+=== ./vcs2l (git) ===
 Already up to date.
 === ./without_version (git) ===
 Already up to date.
