@@ -200,7 +200,7 @@ invocation.
         assert output == expected
 
     def test_reimport(self):
-        cwd_vcs2l = os.path.join(TEST_WORKSPACE, 'vcstool')
+        cwd_vcs2l = os.path.join(TEST_WORKSPACE, 'vcs2l')
         subprocess.check_output(
             ['git', 'remote', 'add', 'foo', 'http://foo.com/bar.git'],
             stderr=subprocess.STDOUT, cwd=cwd_vcs2l)
@@ -253,12 +253,12 @@ invocation.
                 stderr=subprocess.STDOUT, cwd=cwd_tag)
             subprocess.check_output(
                 ['git', 'remote', 'add', 'origin',
-                 'https://github.com/dirk-thomas/vcstool.git'],
+                 'https://github.com/ros-infrastructure/vcs2l.git'],
                 stderr=subprocess.STDOUT, cwd=cwd_tag)
 
     def test_import_force_non_empty(self):
         workdir = os.path.join(TEST_WORKSPACE, 'force-non-empty')
-        os.makedirs(os.path.join(workdir, 'vcstool', 'not-a-git-repo'))
+        os.makedirs(os.path.join(workdir, 'vcs2l', 'not-a-git-repo'))
         try:
             output = run_command(
                 'import', ['--force', '--input', REPOS_FILE, '.'],
@@ -291,7 +291,7 @@ invocation.
             # check that repository history has only one commit
             output = subprocess.check_output(
                 ['git', 'log', '--format=oneline'],
-                stderr=subprocess.STDOUT, cwd=os.path.join(workdir, 'vcstool'))
+                stderr=subprocess.STDOUT, cwd=os.path.join(workdir, 'vcs2l'))
             assert len(output.splitlines()) == 1
         finally:
             rmtree(workdir)
@@ -415,7 +415,7 @@ def adapt_command_output(output, cwd=None):
         # this is less likely to cause wrong test results
         paths_to_replace = [
             (b'.\\immutable', b'./immutable'),
-            (b'.\\vcstool', b'./vcstool'),
+            (b'.\\vcs2l', b'./vcs2l'),
             (b'.\\without_version', b'./without_version'),
             (b'\\hash', b'/hash'),
             (b'\\tag', b'/tag'),

@@ -5,7 +5,7 @@ nothing to commit, working tree clean
 === ./immutable/tag (git) ===
 HEAD detached at 0.1.27
 nothing to commit, working tree clean
-=== ./vcstool (git) ===
+=== ./vcs2l (git) ===
 On branch master
 Your branch is up to date with 'origin/master'.
 
