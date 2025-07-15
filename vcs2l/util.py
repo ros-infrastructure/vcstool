@@ -7,8 +7,8 @@ import sys
 
 def rmtree(path):
     kwargs = {}
-    if sys.platform == 'win32':
-        kwargs['onerror'] = _onerror_windows
+    if sys.platform == "win32":
+        kwargs["onerror"] = _onerror_windows
     return shutil_rmtree(path, **kwargs)
 
 

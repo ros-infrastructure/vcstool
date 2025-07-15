@@ -8,9 +8,8 @@ from .command import simple_main
 
 
 class DiffCommand(Command):
-
-    command = 'diff'
-    help = 'Show changes in the working tree'
+    command = "diff"
+    help = "Show changes in the working tree"
 
     def __init__(self, args):
         super(DiffCommand, self).__init__(args)
@@ -19,11 +18,15 @@ class DiffCommand(Command):
 
 def get_parser():
     parser = argparse.ArgumentParser(
-        description='Show changes in the working tree', prog='vcs diff')
+        description="Show changes in the working tree", prog="vcs diff"
+    )
     group = parser.add_argument_group('"diff" command parameters')
     group.add_argument(
-        '--context', metavar='N', type=int,
-        help='Generate diffs with <n> lines of context')
+        "--context",
+        metavar="N",
+        type=int,
+        help="Generate diffs with <n> lines of context",
+    )
     return parser
 
 
@@ -33,5 +36,5 @@ def main(args=None, stdout=None, stderr=None):
     return simple_main(parser, DiffCommand, args)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     sys.exit(main())

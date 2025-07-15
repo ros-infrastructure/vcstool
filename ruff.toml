@@ -1,0 +1,4 @@
+[lint]
+select = [
+    "F",  # Pyflakes
+]
