@@ -2,7 +2,7 @@
 build
 deb_dist
 dist
-vcstool.egg-info
+vcs2l.egg-info
 .pytest_cache
 __pycache__
 venv
