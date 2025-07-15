@@ -1,7 +1,7 @@
 What is vcs2l?
 ================
 
-Vcs2l is a fork of Dirk Thomas's [vcstool](https://github.com/dirk-thomas/vcstool) which is a version control system (VCS) tool, designed to make working with multiple repositories easier.
+Vcs2l is a fork of Dirk Thomas's `vcstool <https://github.com/dirk-thomas/vcstool/>`_ which is a version control system (VCS) tool, designed to make working with multiple repositories easier.
 This fork is created to continue the development of vcstool, as it is no longer actively maintained.
 
 The commands provided by vcs2l have the same naming structure as the original fork, so it can be used as a drop-in replacement.
@@ -176,19 +176,19 @@ In order to enable that feature the shell specific completion file must be sourc
 
 For *bash* append the following line to the ``~/.bashrc`` file::
 
-  source /usr/share/vcstool-completion/vcs.bash
+  source /usr/share/vcs2l-completion/vcs.bash
 
 For *tcsh* append the following line to the ``~/.cshrc`` file::
 
-  source /usr/share/vcstool-completion/vcs.tcsh
+  source /usr/share/vcs2l-completion/vcs.tcsh
 
 For *zsh* append the following line to the ``~/.zshrc`` file::
 
-  source /usr/share/vcstool-completion/vcs.zsh
+  source /usr/share/vcs2l-completion/vcs.zsh
 
 For *fish* append the following line to the ``~/.config/fishconfig.fish`` file::
 
-  source /usr/share/vcstool-completion/vcs.fish
+  source /usr/share/vcs2l-completion/vcs.fish
 
 How to contribute?
 ==================

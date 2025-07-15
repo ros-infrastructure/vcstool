@@ -1,17 +1,17 @@
 ./immutable/hash (git)
 ./immutable/tag (git)
-./vcstool (git)
+./vcs2l (git)
 ./without_version (git)
 ....
 === ./immutable/hash (git) ===
-origin	https://github.com/dirk-thomas/vcstool.git (fetch)
-origin	https://github.com/dirk-thomas/vcstool.git (push)
+origin	https://github.com/ros-infrastructure/vcs2l.git (fetch)
+origin	https://github.com/ros-infrastructure/vcs2l.git (push)
 === ./immutable/tag (git) ===
-origin	https://github.com/dirk-thomas/vcstool.git (fetch)
-origin	https://github.com/dirk-thomas/vcstool.git (push)
-=== ./vcstool (git) ===
-origin	https://github.com/dirk-thomas/vcstool.git (fetch)
-origin	https://github.com/dirk-thomas/vcstool.git (push)
+origin	https://github.com/ros-infrastructure/vcs2l.git (fetch)
+origin	https://github.com/ros-infrastructure/vcs2l.git (push)
+=== ./vcs2l (git) ===
+origin	https://github.com/ros-infrastructure/vcs2l.git (fetch)
+origin	https://github.com/ros-infrastructure/vcs2l.git (push)
 === ./without_version (git) ===
-origin	https://github.com/dirk-thomas/vcstool.git (fetch)
-origin	https://github.com/dirk-thomas/vcstool.git (push)
+origin	https://github.com/ros-infrastructure/vcs2l.git (fetch)
+origin	https://github.com/ros-infrastructure/vcs2l.git (push)
