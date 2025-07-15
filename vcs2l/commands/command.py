@@ -1,12 +1,14 @@
 import argparse
-from multiprocessing import cpu_count
 import os
+from multiprocessing import cpu_count
 
 from vcs2l.crawler import find_repositories
-from vcs2l.executor import execute_jobs
-from vcs2l.executor import generate_jobs
-from vcs2l.executor import output_repositories
-from vcs2l.executor import output_results
+from vcs2l.executor import (
+    execute_jobs,
+    generate_jobs,
+    output_repositories,
+    output_results,
+)
 
 
 class Command(object):

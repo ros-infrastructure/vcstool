@@ -4,8 +4,8 @@ from threading import Lock
 
 from vcs2l.executor import USE_COLOR
 
-from .vcs_base import VcsClientBase
 from ..util import rmtree
+from .vcs_base import VcsClientBase
 
 
 class HgClient(VcsClientBase):

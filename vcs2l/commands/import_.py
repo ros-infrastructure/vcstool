@@ -1,21 +1,18 @@
 import argparse
 import os
-from shutil import which
 import sys
 import urllib.request as request
+from shutil import which
+
+import yaml
 
 from vcs2l import __version__ as vcs2l_version
 from vcs2l.clients import vcs2l_clients
 from vcs2l.clients.vcs_base import run_command
-from vcs2l.executor import ansi
-from vcs2l.executor import execute_jobs
-from vcs2l.executor import output_repositories
-from vcs2l.executor import output_results
+from vcs2l.executor import ansi, execute_jobs, output_repositories, output_results
 from vcs2l.streams import set_streams
-import yaml
 
-from .command import add_common_arguments
-from .command import Command
+from .command import Command, add_common_arguments
 
 
 class ImportCommand(Command):

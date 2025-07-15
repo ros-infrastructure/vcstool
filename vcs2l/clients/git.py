@@ -1,11 +1,11 @@
 import os
-from shutil import which
 import subprocess
+from shutil import which
 
 from vcs2l.executor import USE_COLOR
 
-from .vcs_base import VcsClientBase
 from ..util import rmtree
+from .vcs_base import VcsClientBase
 
 
 class GitClient(VcsClientBase):

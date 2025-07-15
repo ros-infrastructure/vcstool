@@ -3,13 +3,10 @@ import sys
 
 from vcs2l.clients import vcs2l_clients
 from vcs2l.commands.import_ import get_repositories
-from vcs2l.executor import ansi
-from vcs2l.executor import execute_jobs
-from vcs2l.executor import output_results
+from vcs2l.executor import ansi, execute_jobs, output_results
 from vcs2l.streams import set_streams
 
-from .command import add_common_arguments
-from .command import Command
+from .command import Command, add_common_arguments
 
 
 class ValidateCommand(Command):
