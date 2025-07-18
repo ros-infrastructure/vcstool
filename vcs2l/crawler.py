@@ -1,6 +1,6 @@
 import os
 
-from . import vcstool_clients
+from . import vcs2l_clients
 
 
 def find_repositories(paths, nested=False):
@@ -35,7 +35,7 @@ def _find_repositories(path, repos, visited, nested=False):
 
 
 def get_vcs_client(path):
-    for client_class in vcstool_clients:
+    for client_class in vcs2l_clients:
         if client_class.is_repository(path):
             return client_class(path)
     return None

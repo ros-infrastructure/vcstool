@@ -6,8 +6,8 @@ import unittest
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
-from vcstool.clients.git import GitClient  # noqa: E402
-from vcstool.util import rmtree  # noqa: E402
+from vcs2l.clients.git import GitClient  # noqa: E402
+from vcs2l.util import rmtree  # noqa: E402
 
 file_uri_scheme = 'file://' if sys.platform != 'win32' else 'file:///'
 
@@ -138,7 +138,7 @@ invocation.
 
     def test_pull_api(self):
         from io import StringIO
-        from vcstool.commands.pull import main
+        from vcs2l.commands.pull import main
         stdout_stderr = StringIO()
 
         # change and restore cwd
@@ -146,7 +146,7 @@ invocation.
         os.chdir(TEST_WORKSPACE)
         try:
             # change and restore USE_COLOR flag
-            from vcstool import executor
+            from vcs2l import executor
             use_color_bck = executor.USE_COLOR
             executor.USE_COLOR = False
             try:
@@ -200,10 +200,10 @@ invocation.
         assert output == expected
 
     def test_reimport(self):
-        cwd_vcstool = os.path.join(TEST_WORKSPACE, 'vcstool')
+        cwd_vcs2l = os.path.join(TEST_WORKSPACE, 'vcstool')
         subprocess.check_output(
             ['git', 'remote', 'add', 'foo', 'http://foo.com/bar.git'],
-            stderr=subprocess.STDOUT, cwd=cwd_vcstool)
+            stderr=subprocess.STDOUT, cwd=cwd_vcs2l)
         cwd_without_version = os.path.join(TEST_WORKSPACE, 'without_version')
         subprocess.check_output(
             ['git', 'checkout', '-b', 'foo'],
@@ -234,7 +234,7 @@ invocation.
 
         subprocess.check_output(
             ['git', 'remote', 'remove', 'foo'],
-            stderr=subprocess.STDOUT, cwd=cwd_vcstool)
+            stderr=subprocess.STDOUT, cwd=cwd_vcs2l)
 
     def test_reimport_failed(self):
         cwd_tag = os.path.join(TEST_WORKSPACE, 'immutable', 'tag')
