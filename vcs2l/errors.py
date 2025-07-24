@@ -13,7 +13,7 @@ class Vcs2lError(Exception):
 class UnsupportedPythonVersionError(Vcs2lError):
     """Raised when the Python version is too old for vcs2l."""
 
-    def __init__(self, min_version: str = "3.7"):
+    def __init__(self, min_version: str = "3.5"):
         current_version = f"{sys.version_info.major}.{sys.version_info.minor}"
         message = (
             f"Unsupported Python version ({current_version}). "

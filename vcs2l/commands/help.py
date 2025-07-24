@@ -11,6 +11,8 @@ if sys.version_info >= (3, 8):
     from importlib.metadata import entry_points
 elif sys.version_info >= (3, 7):
     from importlib_metadata import entry_points
+elif sys.version_info >= (3, 5):
+    from pkg_resources import load_entry_point
 else:
     raise UnsupportedPythonVersionError()
 
@@ -94,19 +96,25 @@ def get_entrypoint(command):
                 file=sys.stderr)
         return None
 
-    eps = entry_points()
     ep_name = 'vcs-' + commands[0]
 
     if sys.version_info >= (3, 10):
+        eps = entry_points()
         entry_point = next(iter(
             eps.select(group='console_scripts', name=ep_name)))
         if entry_point:
             return entry_point.load()
 
     elif sys.version_info >= (3, 7):
+        eps = entry_points()
         for ep in eps.get('console_scripts', []):
             if ep.name == ep_name:
                 return ep.load()
+
+    elif sys.version_info >= (3, 5):
+        return load_entry_point(
+            'vcs2l', 'console_scripts', ep_name)
+
     else:
         raise UnsupportedPythonVersionError()
 

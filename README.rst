@@ -15,10 +15,11 @@ Note:
   * The file format of ``vcstool export`` uses the relative paths of the repositories as keys in YAML which avoids collisions by design.
   * ``vcstool`` has significantly fewer lines of code than ``vcstools`` including the command line tools built on top.
 
-Python 3.7+ support
+Python 3.5+ support
 ---------------------------
 
-The latest version supports Python 3.7 and newer.
+The latest version supports Python 3.5 and newer.
+However, the CI is only run on Python 3.7 and newer, as there are no suitable GitHub Actions `runners <https://raw.githubusercontent.com/actions/python-versions/main/versions-manifest.json/>`_ available for Python 3.5 and 3.6.
 
 
 How does it work?
