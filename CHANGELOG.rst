@@ -2,6 +2,11 @@
 Changelog for package vcs2l
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.1.1 (2025-07-30)
+------------------
+* Changed base python version to 3.5. (`#21 <https://github.com/ros-infrastructure/vcs2l/pull/21>`_)
+* Release 1.1.1 (`#22 <https://github.com/ros-infrastructure/vcs2l/pull/22>`_)
+
 1.1.0 (2025-07-11)
 ------------------
 * Fix GitHub workflow to pass on Ubuntu/Mac/Windows (`#2 <https://github.com/ros-infrastructure/vcs2l/pull/2>`_)
