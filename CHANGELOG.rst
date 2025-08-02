@@ -2,6 +2,10 @@
 Changelog for package vcs2l
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.1.2 (2025-08-02)
+------------------
+* Configuration updates for stdeb release to bootstrap repository. (`#25 <https://github.com/ros-infrastructure/vcs2l/pull/25>`_)
+
 1.1.1 (2025-07-30)
 ------------------
 * Changed base python version to 3.5. (`#21 <https://github.com/ros-infrastructure/vcs2l/pull/21>`_)
