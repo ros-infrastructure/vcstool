@@ -66,7 +66,7 @@ This results in something similar to the following for a set of two repositories
     vcs2l:
       type: git
       url: git@github.com:ros-infrastructure/vcs2l.git
-      version: master
+      version: main
     old_tools/rosinstall:
       type: svn
       url: https://github.com/vcstools/rosinstall/trunk

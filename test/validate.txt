@@ -8,6 +8,6 @@ Zip url 'https://github.com/ros-infrastructure/vcs2l/archive/377d5b3d03c212f015c
 === immutable/tag (git) ===
 Found git repository 'https://github.com/ros-infrastructure/vcs2l.git' with tag '0.1.27'
 === vcs2l (git) ===
-Found git repository 'https://github.com/ros-infrastructure/vcs2l.git' with branch 'master'
+Found git repository 'https://github.com/ros-infrastructure/vcs2l.git' with branch 'main'
 === without_version (git) ===
 Found git repository 'https://github.com/ros-infrastructure/vcs2l.git' with default branch

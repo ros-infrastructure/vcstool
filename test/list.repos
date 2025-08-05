@@ -18,7 +18,7 @@ repositories:
   vcs2l:
     type: git
     url: https://github.com/ros-infrastructure/vcs2l.git
-    version: heads/master
+    version: heads/main
   without_version:
     type: git
     url: https://github.com/ros-infrastructure/vcs2l.git
