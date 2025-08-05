@@ -8,7 +8,6 @@ from .command import simple_main
 
 
 class PushCommand(Command):
-
     command = 'push'
     help = 'Push changes from the working copy to the repository'
 
@@ -19,7 +18,8 @@ class PushCommand(Command):
 def get_parser():
     parser = argparse.ArgumentParser(
         description='Push changes from the working copy to the repository',
-        prog='vcs push')
+        prog='vcs push',
+    )
     parser.add_argument_group('"push" command parameters')
     return parser
 

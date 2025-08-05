@@ -10,7 +10,6 @@ from ..util import rmtree
 
 
 class ZipClient(VcsClientBase):
-
     type = 'zip'
 
     @staticmethod
@@ -26,7 +25,7 @@ class ZipClient(VcsClientBase):
                 'cmd': '',
                 'cwd': self.path,
                 'output': "Repository data lacks the 'url' value",
-                'returncode': 1
+                'returncode': 1,
             }
 
         # clear destination
@@ -49,9 +48,8 @@ class ZipClient(VcsClientBase):
             return {
                 'cmd': '',
                 'cwd': self.path,
-                'output':
-                    "Could not fetch zipfile from '%s': %s" % (command.url, e),
-                'returncode': 1
+                'output': "Could not fetch zipfile from '%s': %s" % (command.url, e),
+                'returncode': 1,
             }
 
         def create_path(path):
@@ -62,9 +60,8 @@ class ZipClient(VcsClientBase):
                     return {
                         'cmd': 'os.makedirs(%s)' % path,
                         'cwd': path,
-                        'output':
-                            "Could not create directory '%s': %s" % (path, e),
-                        'returncode': 1
+                        'output': "Could not create directory '%s': %s" % (path, e),
+                        'returncode': 1,
                     }
             return None
 
@@ -75,9 +72,8 @@ class ZipClient(VcsClientBase):
             return {
                 'cmd': 'ZipFile(%s)' % command.url,
                 'cwd': self.path,
-                'output':
-                    "Could not read zipfile from '%s': %s" % (command.url, e),
-                'returncode': 1
+                'output': "Could not read zipfile from '%s': %s" % (command.url, e),
+                'returncode': 1,
             }
         try:
             if not command.version:
@@ -86,10 +82,10 @@ class ZipClient(VcsClientBase):
                 prefix = str(command.version) + '/'
                 for name in zip_file.namelist():
                     if name.startswith(prefix):
-                        if not name[len(prefix):]:
+                        if not name[len(prefix) :]:
                             continue
                         # remap members from version subfolder into destination
-                        dst = os.path.join(self.path, name[len(prefix):])
+                        dst = os.path.join(self.path, name[len(prefix) :])
                         if dst.endswith('/'):
                             # create directories
                             not_exist = create_path(dst)
@@ -105,9 +101,8 @@ class ZipClient(VcsClientBase):
         return {
             'cmd': '',
             'cwd': self.path,
-            'output':
-                "Downloaded zipfile from '%s' and unpacked it" % command.url,
-            'returncode': 0
+            'output': "Downloaded zipfile from '%s' and unpacked it" % command.url,
+            'returncode': 0,
         }
 
     def validate(self, command):
@@ -116,7 +111,7 @@ class ZipClient(VcsClientBase):
                 'cmd': '',
                 'cwd': self.path,
                 'output': "Repository data lacks the 'url' value",
-                'returncode': 1
+                'returncode': 1,
             }
 
         # test url
@@ -126,13 +121,12 @@ class ZipClient(VcsClientBase):
             return {
                 'cmd': '',
                 'cwd': self.path,
-                'output':
-                    "Failed to contact zip url '%s': %s" % (command.url, e),
-                'returncode': 1
+                'output': "Failed to contact zip url '%s': %s" % (command.url, e),
+                'returncode': 1,
             }
         return {
             'cmd': 'http HEAD',
             'cwd': self.path,
             'output': "Zip url '%s' exists" % command.url,
-            'returncode': None
+            'returncode': None,
         }

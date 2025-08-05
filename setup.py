@@ -7,17 +7,15 @@ from setuptools import setup
 from vcs2l import __version__
 
 with open(
-    os.path.join(os.path.dirname(__file__), 'README.rst'),
-        'r', encoding='utf-8') as f:
+    os.path.join(os.path.dirname(__file__), 'README.rst'), 'r', encoding='utf-8'
+) as f:
     long_description = f.read()
 
 setup(
     name='vcs2l',
     version=__version__,
     requires_python='>=3.5',
-    install_requires=[
-        'PyYAML',
-        'setuptools'],
+    install_requires=['PyYAML', 'setuptools'],
     extras_require={
         'test': [
             'flake8',
@@ -25,38 +23,42 @@ setup(
             'flake8-import-order',
             'pycodestyle',
             'pyflakes',
-            'pytest']
-        },
+            'pytest',
+        ]
+    },
     packages=find_packages(),
     author='Dirk Thomas',
     author_email='web@dirk-thomas.net',
     maintainer='ROS Infrastructure Team',
     project_urls={
-        'Source code':
-        'https://github.com/ros-infrastructure/vcs2l',
-        'Issue tracker':
-        'https://github.com/ros-infrastructure/vcs2l/issues',
+        'Source code': 'https://github.com/ros-infrastructure/vcs2l',
+        'Issue tracker': 'https://github.com/ros-infrastructure/vcs2l/issues',
     },
     url='https://github.com/ros-infrastructure/vcs2l',
     keywords=['vcs', 'version control', 'git', 'hg', 'svn', 'bzr'],
-    classifiers=['Development Status :: 5 - Production/Stable',
-                 'Intended Audience :: Developers',
-                 'License :: OSI Approved :: Apache Software License',
-                 'Programming Language :: Python',
-                 'Topic :: Software Development :: Version Control',
-                 'Topic :: Utilities'],
+    classifiers=[
+        'Development Status :: 5 - Production/Stable',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: Apache Software License',
+        'Programming Language :: Python',
+        'Topic :: Software Development :: Version Control',
+        'Topic :: Utilities',
+    ],
     description='vcs2l provides a command line tool to invoke vcs commands '
-        'on multiple repositories.',
+    'on multiple repositories.',
     long_description=long_description,
     long_description_content_type='text/x-rst',
     license='Apache License, Version 2.0',
     data_files=[
-        ('share/vcs2l-completion', [
-            'vcs2l-completion/vcs.bash',
-            'vcs2l-completion/vcs.tcsh',
-            'vcs2l-completion/vcs.zsh',
-            'vcs2l-completion/vcs.fish'
-        ])
+        (
+            'share/vcs2l-completion',
+            [
+                'vcs2l-completion/vcs.bash',
+                'vcs2l-completion/vcs.tcsh',
+                'vcs2l-completion/vcs.zsh',
+                'vcs2l-completion/vcs.fish',
+            ],
+        )
     ],
     entry_points={
         'console_scripts': [
@@ -78,5 +80,5 @@ setup(
             'vcs-svn = vcs2l.commands.custom:svn_main',
             'vcs-validate = vcs2l.commands.validate:main',
         ]
-    }
+    },
 )

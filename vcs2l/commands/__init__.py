@@ -26,5 +26,5 @@ vcs2l_commands.append(ValidateCommand)
 _commands = [c.command for c in vcs2l_commands]
 if len(_commands) != len(set(_commands)):
     raise RuntimeError(
-        'Multiple commands share the same command name: ' +
-        ', '.join(sorted(_commands)))
+        'Multiple commands share the same command name: ' + ', '.join(sorted(_commands))
+    )

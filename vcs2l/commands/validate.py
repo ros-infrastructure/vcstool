@@ -13,7 +13,6 @@ from .command import Command
 
 
 class ValidateCommand(Command):
-
     command = 'validate'
     help = 'Validate the repository list file'
 
@@ -26,13 +25,17 @@ class ValidateCommand(Command):
 
 def get_parser():
     parser = argparse.ArgumentParser(
-        description='Validate a repositories file', prog='vcs validate')
+        description='Validate a repositories file', prog='vcs validate'
+    )
     group = parser.add_argument_group('"validate" command parameters')
+    group.add_argument('--input', type=argparse.FileType('r'), default='-')
     group.add_argument(
-        '--input', type=argparse.FileType('r'), default='-')
-    group.add_argument(
-        '--retry', type=int, metavar='N', default=2,
-        help='Retry commands requiring network access N times on failure')
+        '--retry',
+        type=int,
+        metavar='N',
+        default=2,
+        help='Retry commands requiring network access N times on failure',
+    )
     return parser
 
 
@@ -42,13 +45,13 @@ def generate_jobs(repos, args):
         clients = [c for c in vcs2l_clients if c.type == repo['type']]
         if not clients:
             from vcs2l.clients.none import NoneClient
+
             job = {
                 'client': NoneClient(path),
                 'command': None,
                 'cwd': path,
-                'output':
-                    "Repository type '%s' is not supported" % repo['type'],
-                'returncode': NotImplemented
+                'output': "Repository type '%s' is not supported" % repo['type'],
+                'returncode': NotImplemented,
             }
             jobs.append(job)
             continue
@@ -56,8 +59,8 @@ def generate_jobs(repos, args):
         client = clients[0](path)
         args.path = None  # expected to be present
         command = ValidateCommand(
-            args, repo['url'],
-            str(repo['version']) if 'version' in repo else None)
+            args, repo['url'], str(repo['version']) if 'version' in repo else None
+        )
         job = {'client': client, 'command': command}
         jobs.append(job)
     return jobs
@@ -67,8 +70,7 @@ def main(args=None, stdout=None, stderr=None):
     set_streams(stdout=stdout, stderr=stderr)
 
     parser = get_parser()
-    add_common_arguments(
-        parser, skip_nested=True, path_nargs=False)
+    add_common_arguments(parser, skip_nested=True, path_nargs=False)
     args = parser.parse_args(args)
     try:
         repos = get_repositories(args.input)
@@ -79,8 +81,8 @@ def main(args=None, stdout=None, stderr=None):
     jobs = generate_jobs(repos, args)
 
     results = execute_jobs(
-        jobs, show_progress=True, number_of_workers=args.workers,
-        debug_jobs=args.debug)
+        jobs, show_progress=True, number_of_workers=args.workers, debug_jobs=args.debug
+    )
 
     output_results(results, hide_empty=args.hide_empty)
 

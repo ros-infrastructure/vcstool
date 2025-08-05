@@ -15,7 +15,8 @@ REPOS_FILE = os.path.join(os.path.dirname(__file__), 'list.repos')
 REPOS_FILE_URL = file_uri_scheme + REPOS_FILE
 REPOS2_FILE = os.path.join(os.path.dirname(__file__), 'list2.repos')
 TEST_WORKSPACE = os.path.join(
-    os.path.dirname(os.path.dirname(__file__)), 'test_workspace')
+    os.path.dirname(os.path.dirname(__file__)), 'test_workspace'
+)
 
 CI = os.environ.get('CI') == 'true'  # Travis CI / Github actions set: CI=true
 svn = which('svn')
@@ -30,19 +31,16 @@ if svn:
 
 
 class TestCommands(unittest.TestCase):
-
     @classmethod
     def setUpClass(cls):
         assert not os.path.exists(TEST_WORKSPACE)
         os.makedirs(TEST_WORKSPACE)
 
         try:
-            output = run_command(
-                'import', ['--input', REPOS_FILE, '.'])
+            output = run_command('import', ['--input', REPOS_FILE, '.'])
             expected = get_expected_output('import')
             # newer git versions don't append three dots after the commit hash
-            assert output == expected or \
-                output == expected.replace(b'... ', b' ')
+            assert output == expected or output == expected.replace(b'... ', b' ')
         except Exception:
             cls.tearDownClass()
             raise
@@ -60,13 +58,13 @@ class TestCommands(unittest.TestCase):
         output = run_command(
             'custom',
             args=['--git', '--args', 'describe', '--abbrev=0', '--tags'],
-            subfolder='immutable')
+            subfolder='immutable',
+        )
         expected = get_expected_output('custom_describe')
         self.assertEqual(output, expected)
 
     def test_diff(self):
-        license_path = os.path.join(
-            TEST_WORKSPACE, 'immutable', 'hash', 'LICENSE')
+        license_path = os.path.join(TEST_WORKSPACE, 'immutable', 'hash', 'LICENSE')
         file_length = None
         try:
             with open(license_path, 'ab') as h:
@@ -84,29 +82,23 @@ class TestCommands(unittest.TestCase):
 
     def test_export_exact_with_tags(self):
         output = run_command(
-            'export',
-            args=['--exact-with-tags'],
-            subfolder='immutable')
+            'export', args=['--exact-with-tags'], subfolder='immutable'
+        )
         expected = get_expected_output('export_exact_with_tags')
         self.assertEqual(output, expected)
 
     def test_export_exact(self):
-        output = run_command(
-            'export',
-            args=['--exact'],
-            subfolder='immutable')
+        output = run_command('export', args=['--exact'], subfolder='immutable')
         expected = get_expected_output('export_exact')
         self.assertEqual(output, expected)
 
     def test_log(self):
-        output = run_command(
-            'log', args=['--limit', '2'], subfolder='immutable')
+        output = run_command('log', args=['--limit', '2'], subfolder='immutable')
         expected = get_expected_output('log_limit')
         self.assertEqual(output, expected)
 
     def test_log_merge_only(self):
-        output = run_command(
-            'log', args=['--merge-only'], subfolder='immutable/tag')
+        output = run_command('log', args=['--merge-only'], subfolder='immutable/tag')
         expected = get_expected_output('log_merges_only')
         self.assertEqual(output, expected)
 
@@ -116,7 +108,8 @@ class TestCommands(unittest.TestCase):
         # replace message from older git versions
         output = output.replace(
             b'anch. Please specify which\nbranch you want to merge with. See',
-            b'anch.\nPlease specify which branch you want to merge with.\nSee')
+            b'anch.\nPlease specify which branch you want to merge with.\nSee',
+        )
         # newer git versions warn on pull with default config
         if GitClient.get_git_version() >= [2, 27, 0]:
             pull_warning = b"""
@@ -139,6 +132,7 @@ invocation.
     def test_pull_api(self):
         from io import StringIO
         from vcs2l.commands.pull import main
+
         stdout_stderr = StringIO()
 
         # change and restore cwd
@@ -147,6 +141,7 @@ invocation.
         try:
             # change and restore USE_COLOR flag
             from vcs2l import executor
+
             use_color_bck = executor.USE_COLOR
             executor.USE_COLOR = False
             try:
@@ -156,12 +151,17 @@ invocation.
                 os.environ.update(
                     LANG='en_US.UTF-8',
                     PYTHONPATH=(
-                        os.path.dirname(os.path.dirname(__file__)) +
-                        os.pathsep + os.environ.get('PYTHONPATH', '')))
+                        os.path.dirname(os.path.dirname(__file__))
+                        + os.pathsep
+                        + os.environ.get('PYTHONPATH', '')
+                    ),
+                )
                 try:
                     rc = main(
                         args=['--workers', '1'],
-                        stdout=stdout_stderr, stderr=stdout_stderr)
+                        stdout=stdout_stderr,
+                        stderr=stdout_stderr,
+                    )
                 finally:
                     os.environ = env_bck
             finally:
@@ -173,7 +173,8 @@ invocation.
         # replace message from older git versions
         output = stdout_stderr.getvalue().replace(
             'anch. Please specify which\nbranch you want to merge with. See',
-            'anch.\nPlease specify which branch you want to merge with.\nSee')
+            'anch.\nPlease specify which branch you want to merge with.\nSee',
+        )
         # newer git versions warn on pull with default config
         if GitClient.get_git_version() >= [2, 27, 0]:
             pull_warning = """
@@ -203,25 +204,28 @@ invocation.
         cwd_vcs2l = os.path.join(TEST_WORKSPACE, 'vcs2l')
         subprocess.check_output(
             ['git', 'remote', 'add', 'foo', 'http://foo.com/bar.git'],
-            stderr=subprocess.STDOUT, cwd=cwd_vcs2l)
+            stderr=subprocess.STDOUT,
+            cwd=cwd_vcs2l,
+        )
         cwd_without_version = os.path.join(TEST_WORKSPACE, 'without_version')
         subprocess.check_output(
             ['git', 'checkout', '-b', 'foo'],
-            stderr=subprocess.STDOUT, cwd=cwd_without_version)
-        output = run_command(
-            'import', ['--skip-existing', '--input', REPOS_FILE, '.'])
+            stderr=subprocess.STDOUT,
+            cwd=cwd_without_version,
+        )
+        output = run_command('import', ['--skip-existing', '--input', REPOS_FILE, '.'])
         expected = get_expected_output('reimport_skip')
         # newer git versions don't append three dots after the commit hash
         assert output == expected or output == expected.replace(b'... ', b' ')
 
         subprocess.check_output(
             ['git', 'remote', 'set-url', 'origin', 'http://foo.com/bar.git'],
-            stderr=subprocess.STDOUT, cwd=cwd_without_version)
-        run_command(
-            'import', ['--skip-existing', '--input', REPOS_FILE, '.'])
+            stderr=subprocess.STDOUT,
+            cwd=cwd_without_version,
+        )
+        run_command('import', ['--skip-existing', '--input', REPOS_FILE, '.'])
 
-        output = run_command(
-            'import', ['--force', '--input', REPOS_FILE, '.'])
+        output = run_command('import', ['--force', '--input', REPOS_FILE, '.'])
         expected = get_expected_output('reimport_force')
         # on Windows, the "Already on 'main'" message is after the
         # "Your branch is up to date with ..." message, so remove it
@@ -233,41 +237,49 @@ invocation.
         assert output == expected or output == expected.replace(b'... ', b' ')
 
         subprocess.check_output(
-            ['git', 'remote', 'remove', 'foo'],
-            stderr=subprocess.STDOUT, cwd=cwd_vcs2l)
+            ['git', 'remote', 'remove', 'foo'], stderr=subprocess.STDOUT, cwd=cwd_vcs2l
+        )
 
     def test_reimport_failed(self):
         cwd_tag = os.path.join(TEST_WORKSPACE, 'immutable', 'tag')
         subprocess.check_output(
             ['git', 'remote', 'add', 'foo', 'http://foo.com/bar.git'],
-            stderr=subprocess.STDOUT, cwd=cwd_tag)
+            stderr=subprocess.STDOUT,
+            cwd=cwd_tag,
+        )
         subprocess.check_output(
-            ['git', 'remote', 'rm', 'origin'],
-            stderr=subprocess.STDOUT, cwd=cwd_tag)
+            ['git', 'remote', 'rm', 'origin'], stderr=subprocess.STDOUT, cwd=cwd_tag
+        )
         try:
-            run_command(
-                'import', ['--skip-existing', '--input', REPOS_FILE, '.'])
+            run_command('import', ['--skip-existing', '--input', REPOS_FILE, '.'])
         finally:
             subprocess.check_output(
-                ['git', 'remote', 'rm', 'foo'],
-                stderr=subprocess.STDOUT, cwd=cwd_tag)
+                ['git', 'remote', 'rm', 'foo'], stderr=subprocess.STDOUT, cwd=cwd_tag
+            )
             subprocess.check_output(
-                ['git', 'remote', 'add', 'origin',
-                 'https://github.com/ros-infrastructure/vcs2l.git'],
-                stderr=subprocess.STDOUT, cwd=cwd_tag)
+                [
+                    'git',
+                    'remote',
+                    'add',
+                    'origin',
+                    'https://github.com/ros-infrastructure/vcs2l.git',
+                ],
+                stderr=subprocess.STDOUT,
+                cwd=cwd_tag,
+            )
 
     def test_import_force_non_empty(self):
         workdir = os.path.join(TEST_WORKSPACE, 'force-non-empty')
         os.makedirs(os.path.join(workdir, 'vcs2l', 'not-a-git-repo'))
         try:
             output = run_command(
-                'import', ['--force', '--input', REPOS_FILE, '.'],
-                subfolder='force-non-empty')
+                'import',
+                ['--force', '--input', REPOS_FILE, '.'],
+                subfolder='force-non-empty',
+            )
             expected = get_expected_output('import')
             # newer git versions don't append ... after the commit hash
-            assert (
-                output == expected or
-                output == expected.replace(b'... ', b' '))
+            assert output == expected or output == expected.replace(b'... ', b' ')
         finally:
             rmtree(workdir)
 
@@ -276,22 +288,24 @@ invocation.
         os.makedirs(workdir)
         try:
             output = run_command(
-                'import', ['--shallow', '--input', REPOS_FILE, '.'],
-                subfolder='import-shallow')
+                'import',
+                ['--shallow', '--input', REPOS_FILE, '.'],
+                subfolder='import-shallow',
+            )
             # the actual output contains absolute paths
             output = output.replace(
-                b'repository in ' + workdir.encode() + b'/',
-                b'repository in ./')
+                b'repository in ' + workdir.encode() + b'/', b'repository in ./'
+            )
             expected = get_expected_output('import_shallow')
             # newer git versions don't append ... after the commit hash
-            assert (
-                output == expected or
-                output == expected.replace(b'... ', b' '))
+            assert output == expected or output == expected.replace(b'... ', b' ')
 
             # check that repository history has only one commit
             output = subprocess.check_output(
                 ['git', 'log', '--format=oneline'],
-                stderr=subprocess.STDOUT, cwd=os.path.join(workdir, 'vcs2l'))
+                stderr=subprocess.STDOUT,
+                cwd=os.path.join(workdir, 'vcs2l'),
+            )
             assert len(output.splitlines()) == 1
         finally:
             rmtree(workdir)
@@ -301,28 +315,24 @@ invocation.
         os.makedirs(workdir)
         try:
             output = run_command(
-                'import', ['--input', REPOS_FILE_URL, '.'],
-                subfolder='import-url')
+                'import', ['--input', REPOS_FILE_URL, '.'], subfolder='import-url'
+            )
             # the actual output contains absolute paths
             output = output.replace(
-                b'repository in ' + workdir.encode() + b'/',
-                b'repository in ./')
+                b'repository in ' + workdir.encode() + b'/', b'repository in ./'
+            )
             expected = get_expected_output('import')
             # newer git versions don't append ... after the commit hash
-            assert (
-                output == expected or
-                output == expected.replace(b'... ', b' '))
+            assert output == expected or output == expected.replace(b'... ', b' ')
         finally:
             rmtree(workdir)
 
     def test_validate(self):
-        output = run_command(
-            'validate', ['--input', REPOS_FILE])
+        output = run_command('validate', ['--input', REPOS_FILE])
         expected = get_expected_output('validate')
         self.assertEqual(output, expected)
 
-        output = run_command(
-            'validate', ['--hide-empty', '--input', REPOS_FILE])
+        output = run_command('validate', ['--hide-empty', '--input', REPOS_FILE])
         expected = get_expected_output('validate_hide')
         self.assertEqual(output, expected)
 
@@ -330,8 +340,7 @@ invocation.
     @unittest.skipIf(not svn, '`svn` was not found')
     @unittest.skipIf(not hg, '`hg` was not found')
     def test_validate_svn_and_hg(self):
-        output = run_command(
-            'validate', ['--input', REPOS2_FILE])
+        output = run_command('validate', ['--input', REPOS2_FILE])
         expected = get_expected_output('validate2')
         self.assertEqual(output, expected)
 
@@ -344,11 +353,9 @@ invocation.
         output = run_command('status')
         # replace message from older git versions
         # https://github.com/git/git/blob/3ec7d702a89c647ddf42a59bc3539361367de9d5/Documentation/RelNotes/2.10.0.txt#L373-L374
-        output = output.replace(
-            b'working directory clean', b'working tree clean')
+        output = output.replace(b'working directory clean', b'working tree clean')
         # the following seems to have changed between git 2.10.0 and 2.14.1
-        output = output.replace(
-            b'.\nnothing to commit', b'.\n\nnothing to commit')
+        output = output.replace(b'.\nnothing to commit', b'.\n\nnothing to commit')
         expected = get_expected_output('status')
         self.assertEqual(output, expected)
 
@@ -359,13 +366,17 @@ def run_command(command, args=None, subfolder=None):
     env = dict(os.environ)
     env.update(
         LANG='en_US.UTF-8',
-        PYTHONPATH=repo_root + os.pathsep + env.get('PYTHONPATH', ''))
+        PYTHONPATH=repo_root + os.pathsep + env.get('PYTHONPATH', ''),
+    )
     cwd = TEST_WORKSPACE
     if subfolder:
         cwd = os.path.join(cwd, subfolder)
     output = subprocess.check_output(
         [sys.executable, script] + (args or []),
-        stderr=subprocess.STDOUT, cwd=cwd, env=env)
+        stderr=subprocess.STDOUT,
+        cwd=cwd,
+        env=env,
+    )
     return adapt_command_output(output, cwd)
 
 
@@ -373,38 +384,37 @@ def adapt_command_output(output, cwd=None):
     assert isinstance(output, bytes)
     # replace message from older git versions
     output = output.replace(
-        b'git checkout -b new_branch_name',
-        b'git checkout -b <new-branch-name>')
-    output = output.replace(
-        b'(detached from ', b'(HEAD detached at ')
+        b'git checkout -b new_branch_name', b'git checkout -b <new-branch-name>'
+    )
+    output = output.replace(b'(detached from ', b'(HEAD detached at ')
     output = output.replace(
         b"ady on 'main'\n=",
-        b"ady on 'main'\nYour branch is up-to-date with 'origin/main'.\n=")
-    output = output.replace(
-        b'# HEAD detached at ',
-        b'HEAD detached at ')
+        b"ady on 'main'\nYour branch is up-to-date with 'origin/main'.\n=",
+    )
+    output = output.replace(b'# HEAD detached at ', b'HEAD detached at ')
     output = output.replace(
         b'# On branch main',
-        b"On branch main\nYour branch is up-to-date with 'origin/main'.\n")
+        b"On branch main\nYour branch is up-to-date with 'origin/main'.\n",
+    )
     # the following seems to have changed between git 2.17.1 and 2.25.1
+    output = output.replace(b"Note: checking out '", b"Note: switching to '")
     output = output.replace(
-        b"Note: checking out '", b"Note: switching to '")
-    output = output.replace(
-        b'by performing another checkout.',
-        b'by switching back to a branch.')
+        b'by performing another checkout.', b'by switching back to a branch.'
+    )
     output = output.replace(
         b'using -b with the checkout command again.',
-        b'using -c with the switch command.')
+        b'using -c with the switch command.',
+    )
     output = output.replace(
         b'git checkout -b <new-branch-name>',
         b'git switch -c <new-branch-name>\n\n'
         b'Or undo this operation with:\n\n'
         b'  git switch -\n\n'
         b'Turn off this advice by setting config variable '
-        b'advice.detachedHead to false')
+        b'advice.detachedHead to false',
+    )
     # replace GitHub SSH clone URL
-    output = output.replace(
-        b'git@github.com:', b'https://github.com/')
+    output = output.replace(b'git@github.com:', b'https://github.com/')
     if sys.platform == 'win32':
         if cwd:
             # on Windows, git prints full path to repos
