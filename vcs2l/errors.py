@@ -1,4 +1,5 @@
 """Custom exceptions for the vcs2l package."""
+
 import sys
 
 

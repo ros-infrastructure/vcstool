@@ -1,7 +1,6 @@
 import sys
 
-from vcs2l.commands.help import get_entrypoint
-from vcs2l.commands.help import get_parser
+from vcs2l.commands.help import get_entrypoint, get_parser
 from vcs2l.commands.help import main as help_main
 from vcs2l.streams import set_streams
 
@@ -15,7 +14,7 @@ def main(args=None, stdout=None, stderr=None):
     args = args if args is not None else sys.argv[1:]
 
     # relay to specific command
-    if ns.command and ns.command != 'help':
+    if ns.command and ns.command != "help":
         entrypoint = get_entrypoint(ns.command)
         if not entrypoint:
             return 1
@@ -30,5 +29,5 @@ def main(args=None, stdout=None, stderr=None):
     return help_main(args)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     sys.exit(main())

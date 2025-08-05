@@ -2,21 +2,20 @@ import argparse
 import sys
 
 from vcs2l.clients import vcs2l_clients
+from vcs2l.commands.command import Command, add_common_arguments
 from vcs2l.crawler import find_repositories
-from vcs2l.executor import execute_jobs
-from vcs2l.executor import generate_jobs
-from vcs2l.executor import output_repositories
-from vcs2l.executor import output_results
+from vcs2l.executor import (
+    execute_jobs,
+    generate_jobs,
+    output_repositories,
+    output_results,
+)
 from vcs2l.streams import set_streams
-
-from .command import add_common_arguments
-from .command import Command
 
 
 class CustomCommand(Command):
-
-    command = 'custom'
-    help = 'Run a custom command'
+    command = "custom"
+    help = "Run a custom command"
 
     def __init__(self, args):
         super(CustomCommand, self).__init__(args)
@@ -25,20 +24,27 @@ class CustomCommand(Command):
 
 def get_parser():
     parser = argparse.ArgumentParser(
-        description='Run a custom command', prog='vcs custom')
+        description="Run a custom command", prog="vcs custom"
+    )
     group = parser.add_argument_group(
-        '"custom" command parameters restricting the repositories')
-    for client_type in [
-        c.type for c in vcs2l_clients if c.type not in ['tar']
-    ]:
+        '"custom" command parameters restricting the repositories'
+    )
+    for client_type in [c.type for c in vcs2l_clients if c.type not in ["tar"]]:
         group.add_argument(
-            '--' + client_type, action='store_true', default=False,
-            help="Run command on '%s' repositories" % client_type)
+            "--" + client_type,
+            action="store_true",
+            default=False,
+            help="Run command on '%s' repositories" % client_type,
+        )
     group = parser.add_argument_group('"custom" command parameters')
     group.add_argument(
-        '--args', required=True, nargs='*', help='Arbitrary arguments passed '
-        'to each vcs invocation. It must be passed after other arguments '
-        'since it collects all following options.')
+        "--args",
+        required=True,
+        nargs="*",
+        help="Arbitrary arguments passed "
+        "to each vcs invocation. It must be passed after other arguments "
+        "since it collects all following options.",
+    )
     return parser
 
 
@@ -52,7 +58,7 @@ def main(args=None, stdout=None, stderr=None):
     if args is None:
         args = sys.argv[1:]
     try:
-        index = args.index('--args') + 1
+        index = args.index("--args") + 1
     except ValueError:
         # should generate error due to missing --args
         parser.parse_known_args(args)
@@ -83,38 +89,38 @@ def main(args=None, stdout=None, stderr=None):
         output_repositories(clients)
     jobs = generate_jobs(clients, command)
     results = execute_jobs(
-        jobs, show_progress=True, number_of_workers=args.workers,
-        debug_jobs=args.debug)
+        jobs, show_progress=True, number_of_workers=args.workers, debug_jobs=args.debug
+    )
 
     output_results(results, hide_empty=args.hide_empty)
 
-    any_error = any(r['returncode'] for r in results)
+    any_error = any(r["returncode"] for r in results)
     return 1 if any_error else 0
 
 
 def bzr_main(args=None):
     if args is None:
         args = sys.argv[1:]
-    return main(['--bzr', '--args'] + args)
+    return main(["--bzr", "--args"] + args)
 
 
 def git_main(args=None):
     if args is None:
         args = sys.argv[1:]
-    return main(['--git', '--args'] + args)
+    return main(["--git", "--args"] + args)
 
 
 def hg_main(args=None):
     if args is None:
         args = sys.argv[1:]
-    return main(['--hg', '--args'] + args)
+    return main(["--hg", "--args"] + args)
 
 
 def svn_main(args=None):
     if args is None:
         args = sys.argv[1:]
-    return main(['--svn', '--args'] + args)
+    return main(["--svn", "--args"] + args)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     sys.exit(main())

@@ -1,14 +1,14 @@
-from errno import EACCES, EPERM
 import os
-from shutil import rmtree as shutil_rmtree
 import stat
 import sys
+from errno import EACCES, EPERM
+from shutil import rmtree as shutil_rmtree
 
 
 def rmtree(path):
     kwargs = {}
-    if sys.platform == 'win32':
-        kwargs['onerror'] = _onerror_windows
+    if sys.platform == "win32":
+        kwargs["onerror"] = _onerror_windows
     return shutil_rmtree(path, **kwargs)
 
 
