@@ -6,7 +6,6 @@ from vcs2l.commands import vcs2l_commands
 from vcs2l.errors import UnsupportedPythonVersionError
 from vcs2l.streams import set_streams
 
-
 if sys.version_info >= (3, 8):
     from importlib.metadata import entry_points
 elif sys.version_info >= (3, 7):

@@ -1,12 +1,10 @@
-from io import BytesIO
 import os
 import tarfile
+from io import BytesIO
 from urllib.error import URLError
 
-from .vcs_base import load_url
-from .vcs_base import test_url
-from .vcs_base import VcsClientBase
-from ..util import rmtree
+from vcs2l.clients.vcs_base import VcsClientBase, load_url, test_url
+from vcs2l.util import rmtree
 
 
 class TarClient(VcsClientBase):

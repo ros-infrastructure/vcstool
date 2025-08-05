@@ -1,7 +1,6 @@
 import sys
 
-from vcs2l.commands.help import get_entrypoint
-from vcs2l.commands.help import get_parser
+from vcs2l.commands.help import get_entrypoint, get_parser
 from vcs2l.commands.help import main as help_main
 from vcs2l.streams import set_streams
 

@@ -1,6 +1,7 @@
 [lint]
 select = [
     'F',  # Pyflakes
+    'I',  # isort
 ]
 
 [format]
