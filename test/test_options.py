@@ -5,7 +5,6 @@ import unittest
 
 
 class TestOptions(unittest.TestCase):
-
     def test_clients(self):
         output = run_command(['--clients'])
         expected = get_expected_output('clients')
@@ -23,10 +22,11 @@ def run_command(args):
     env = dict(os.environ)
     env.update(
         LANG='en_US.UTF-8',
-        PYTHONPATH=repo_root + os.pathsep + env.get('PYTHONPATH', ''))
+        PYTHONPATH=repo_root + os.pathsep + env.get('PYTHONPATH', ''),
+    )
     return subprocess.check_output(
-        [sys.executable, script] + (args or []),
-        stderr=subprocess.STDOUT, env=env)
+        [sys.executable, script] + (args or []), stderr=subprocess.STDOUT, env=env
+    )
 
 
 def get_expected_output(name):
