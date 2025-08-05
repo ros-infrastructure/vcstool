@@ -1,9 +1,9 @@
 import logging
 import os
-from queue import Empty, Queue
 import sys
 import threading
 import traceback
+from queue import Empty, Queue
 
 logger = logging.getLogger(__name__)
 logging.basicConfig()
