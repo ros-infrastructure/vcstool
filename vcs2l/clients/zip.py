@@ -10,8 +10,7 @@ from ..util import rmtree
 
 
 class ZipClient(VcsClientBase):
-
-    type = 'zip'
+    type = "zip"
 
     @staticmethod
     def is_repository(path):
@@ -23,10 +22,10 @@ class ZipClient(VcsClientBase):
     def import_(self, command):
         if not command.url:
             return {
-                'cmd': '',
-                'cwd': self.path,
-                'output': "Repository data lacks the 'url' value",
-                'returncode': 1
+                "cmd": "",
+                "cwd": self.path,
+                "output": "Repository data lacks the 'url' value",
+                "returncode": 1,
             }
 
         # clear destination
@@ -47,11 +46,10 @@ class ZipClient(VcsClientBase):
             data = load_url(command.url, retry=command.retry)
         except URLError as e:
             return {
-                'cmd': '',
-                'cwd': self.path,
-                'output':
-                    "Could not fetch zipfile from '%s': %s" % (command.url, e),
-                'returncode': 1
+                "cmd": "",
+                "cwd": self.path,
+                "output": "Could not fetch zipfile from '%s': %s" % (command.url, e),
+                "returncode": 1,
             }
 
         def create_path(path):
@@ -60,63 +58,60 @@ class ZipClient(VcsClientBase):
                     os.makedirs(path)
                 except os.error as e:
                     return {
-                        'cmd': 'os.makedirs(%s)' % path,
-                        'cwd': path,
-                        'output':
-                            "Could not create directory '%s': %s" % (path, e),
-                        'returncode': 1
+                        "cmd": "os.makedirs(%s)" % path,
+                        "cwd": path,
+                        "output": "Could not create directory '%s': %s" % (path, e),
+                        "returncode": 1,
                     }
             return None
 
         # unpack zipfile into destination
         try:
-            zip_file = zipfile.ZipFile(BytesIO(data), mode='r')
+            zip_file = zipfile.ZipFile(BytesIO(data), mode="r")
         except zipfile.BadZipfile as e:
             return {
-                'cmd': 'ZipFile(%s)' % command.url,
-                'cwd': self.path,
-                'output':
-                    "Could not read zipfile from '%s': %s" % (command.url, e),
-                'returncode': 1
+                "cmd": "ZipFile(%s)" % command.url,
+                "cwd": self.path,
+                "output": "Could not read zipfile from '%s': %s" % (command.url, e),
+                "returncode": 1,
             }
         try:
             if not command.version:
                 zip_file.extractall(self.path)
             else:
-                prefix = str(command.version) + '/'
+                prefix = str(command.version) + "/"
                 for name in zip_file.namelist():
                     if name.startswith(prefix):
-                        if not name[len(prefix):]:
+                        if not name[len(prefix) :]:
                             continue
                         # remap members from version subfolder into destination
-                        dst = os.path.join(self.path, name[len(prefix):])
-                        if dst.endswith('/'):
+                        dst = os.path.join(self.path, name[len(prefix) :])
+                        if dst.endswith("/"):
                             # create directories
                             not_exist = create_path(dst)
                             if not_exist:
                                 return not_exist
                         else:
-                            with zip_file.open(name, mode='r') as src_handle:
-                                with open(dst, 'wb') as dst_handle:
+                            with zip_file.open(name, mode="r") as src_handle:
+                                with open(dst, "wb") as dst_handle:
                                     dst_handle.write(src_handle.read())
         finally:
             zip_file.close()
 
         return {
-            'cmd': '',
-            'cwd': self.path,
-            'output':
-                "Downloaded zipfile from '%s' and unpacked it" % command.url,
-            'returncode': 0
+            "cmd": "",
+            "cwd": self.path,
+            "output": "Downloaded zipfile from '%s' and unpacked it" % command.url,
+            "returncode": 0,
         }
 
     def validate(self, command):
         if not command.url:
             return {
-                'cmd': '',
-                'cwd': self.path,
-                'output': "Repository data lacks the 'url' value",
-                'returncode': 1
+                "cmd": "",
+                "cwd": self.path,
+                "output": "Repository data lacks the 'url' value",
+                "returncode": 1,
             }
 
         # test url
@@ -124,15 +119,14 @@ class ZipClient(VcsClientBase):
             test_url(command.url, retry=command.retry)
         except URLError as e:
             return {
-                'cmd': '',
-                'cwd': self.path,
-                'output':
-                    "Failed to contact zip url '%s': %s" % (command.url, e),
-                'returncode': 1
+                "cmd": "",
+                "cwd": self.path,
+                "output": "Failed to contact zip url '%s': %s" % (command.url, e),
+                "returncode": 1,
             }
         return {
-            'cmd': 'http HEAD',
-            'cwd': self.path,
-            'output': "Zip url '%s' exists" % command.url,
-            'returncode': None
+            "cmd": "http HEAD",
+            "cwd": self.path,
+            "output": "Zip url '%s' exists" % command.url,
+            "returncode": None,
         }

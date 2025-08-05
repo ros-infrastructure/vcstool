@@ -10,8 +10,7 @@ from ..util import rmtree
 
 
 class TarClient(VcsClientBase):
-
-    type = 'tar'
+    type = "tar"
 
     @staticmethod
     def is_repository(path):
@@ -23,10 +22,10 @@ class TarClient(VcsClientBase):
     def import_(self, command):
         if not command.url:
             return {
-                'cmd': '',
-                'cwd': self.path,
-                'output': "Repository data lacks the 'url' value",
-                'returncode': 1
+                "cmd": "",
+                "cwd": self.path,
+                "output": "Repository data lacks the 'url' value",
+                "returncode": 1,
             }
 
         # clear destination
@@ -47,25 +46,23 @@ class TarClient(VcsClientBase):
             data = load_url(command.url, retry=command.retry)
         except URLError as e:
             return {
-                'cmd': '',
-                'cwd': self.path,
-                'output':
-                    "Could not fetch tarball from '%s': %s" % (command.url, e),
-                'returncode': 1
+                "cmd": "",
+                "cwd": self.path,
+                "output": "Could not fetch tarball from '%s': %s" % (command.url, e),
+                "returncode": 1,
             }
 
         # unpack tarball into destination
         try:
             # raise all fatal errors
-            tar = tarfile.open(mode='r', fileobj=BytesIO(data), errorlevel=1)
+            tar = tarfile.open(mode="r", fileobj=BytesIO(data), errorlevel=1)
         except (tarfile.ReadError, IOError, OSError) as e:
             return {
-                'cmd': '',
-                'cwd': self.path,
-                'output':
-                    "Failed to read tarball fetched from '%s': %s" %
-                    (command.url, e),
-                'returncode': 1
+                "cmd": "",
+                "cwd": self.path,
+                "output": "Failed to read tarball fetched from '%s': %s"
+                % (command.url, e),
+                "returncode": 1,
             }
 
         if not command.version:
@@ -75,27 +72,27 @@ class TarClient(VcsClientBase):
             def get_members(tar, prefix):
                 for tar_info in tar.getmembers():
                     if tar_info.name.startswith(prefix):
-                        tar_info.name = tar_info.name[len(prefix):]
+                        tar_info.name = tar_info.name[len(prefix) :]
                         yield tar_info
-            prefix = str(command.version) + '/'
+
+            prefix = str(command.version) + "/"
             members = get_members(tar, prefix)
         tar.extractall(self.path, members)
 
         return {
-            'cmd': '',
-            'cwd': self.path,
-            'output':
-                "Downloaded tarball from '%s' and unpacked it" % command.url,
-            'returncode': 0
+            "cmd": "",
+            "cwd": self.path,
+            "output": "Downloaded tarball from '%s' and unpacked it" % command.url,
+            "returncode": 0,
         }
 
     def validate(self, command):
         if not command.url:
             return {
-                'cmd': '',
-                'cwd': self.path,
-                'output': "Repository data lacks the 'url' value",
-                'returncode': 1
+                "cmd": "",
+                "cwd": self.path,
+                "output": "Repository data lacks the 'url' value",
+                "returncode": 1,
             }
 
         # test url
@@ -103,16 +100,14 @@ class TarClient(VcsClientBase):
             test_url(command.url, retry=command.retry)
         except URLError as e:
             return {
-                'cmd': '',
-                'cwd': self.path,
-                'output':
-                    "Failed to contact tarball url '%s': %s" %
-                    (command.url, e),
-                'returncode': 1
+                "cmd": "",
+                "cwd": self.path,
+                "output": "Failed to contact tarball url '%s': %s" % (command.url, e),
+                "returncode": 1,
             }
         return {
-            'cmd': 'http HEAD url',
-            'cwd': self.path,
-            'output': "Tarball url '%s' exists" % command.url,
-            'returncode': None
+            "cmd": "http HEAD url",
+            "cwd": self.path,
+            "output": "Tarball url '%s' exists" % command.url,
+            "returncode": None,
         }
