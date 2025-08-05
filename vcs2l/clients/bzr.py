@@ -2,8 +2,8 @@ import copy
 import os
 from shutil import which
 
-from .vcs_base import VcsClientBase
-from ..util import rmtree
+from vcs2l.clients.vcs_base import VcsClientBase
+from vcs2l.util import rmtree
 
 
 class BzrClient(VcsClientBase):

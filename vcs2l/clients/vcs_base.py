@@ -2,10 +2,8 @@ import os
 import socket
 import subprocess
 import time
-from urllib.error import HTTPError
-from urllib.error import URLError
-from urllib.request import Request
-from urllib.request import urlopen
+from urllib.error import HTTPError, URLError
+from urllib.request import Request, urlopen
 
 
 class VcsClientBase(object):

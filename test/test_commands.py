@@ -1,8 +1,8 @@
 import os
-from shutil import which
 import subprocess
 import sys
 import unittest
+from shutil import which
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
@@ -131,6 +131,7 @@ invocation.
 
     def test_pull_api(self):
         from io import StringIO
+
         from vcs2l.commands.pull import main
 
         stdout_stderr = StringIO()

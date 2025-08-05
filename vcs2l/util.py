@@ -1,8 +1,8 @@
-from errno import EACCES, EPERM
 import os
-from shutil import rmtree as shutil_rmtree
 import stat
 import sys
+from errno import EACCES, EPERM
+from shutil import rmtree as shutil_rmtree
 
 
 def rmtree(path):

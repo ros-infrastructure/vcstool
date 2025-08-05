@@ -1,10 +1,8 @@
 import argparse
 import sys
 
+from vcs2l.commands.command import Command, simple_main
 from vcs2l.streams import set_streams
-
-from .command import Command
-from .command import simple_main
 
 
 class PushCommand(Command):
