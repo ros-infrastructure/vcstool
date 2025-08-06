@@ -4,6 +4,6 @@
 === ./immutable/tag (git) ===
 (HEAD detached at 0.1.27)
 === ./vcs2l (git) ===
-master
+main
 === ./without_version (git) ===
-master
+main

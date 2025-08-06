@@ -223,12 +223,12 @@ invocation.
         output = run_command(
             'import', ['--force', '--input', REPOS_FILE, '.'])
         expected = get_expected_output('reimport_force')
-        # on Windows, the "Already on 'master'" message is after the
+        # on Windows, the "Already on 'main'" message is after the
         # "Your branch is up to date with ..." message, so remove it
         # from both output and expected strings
         if sys.platform == 'win32':
-            output = output.replace(b"Already on 'master'\r\n", b'')
-            expected = expected.replace(b"Already on 'master'\r\n", b'')
+            output = output.replace(b"Already on 'main'\r\n", b'')
+            expected = expected.replace(b"Already on 'main'\r\n", b'')
         # newer git versions don't append three dots after the commit hash
         assert output == expected or output == expected.replace(b'... ', b' ')
 
@@ -378,14 +378,14 @@ def adapt_command_output(output, cwd=None):
     output = output.replace(
         b'(detached from ', b'(HEAD detached at ')
     output = output.replace(
-        b"ady on 'master'\n=",
-        b"ady on 'master'\nYour branch is up-to-date with 'origin/master'.\n=")
+        b"ady on 'main'\n=",
+        b"ady on 'main'\nYour branch is up-to-date with 'origin/main'.\n=")
     output = output.replace(
         b'# HEAD detached at ',
         b'HEAD detached at ')
     output = output.replace(
-        b'# On branch master',
-        b"On branch master\nYour branch is up-to-date with 'origin/master'.\n")
+        b'# On branch main',
+        b"On branch main\nYour branch is up-to-date with 'origin/main'.\n")
     # the following seems to have changed between git 2.17.1 and 2.25.1
     output = output.replace(
         b"Note: checking out '", b"Note: switching to '")
