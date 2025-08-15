@@ -1,14 +1,11 @@
 import argparse
 import sys
 
+from vcs2l.commands.command import Command, simple_main
 from vcs2l.streams import set_streams
-
-from .command import Command
-from .command import simple_main
 
 
 class DiffCommand(Command):
-
     command = 'diff'
     help = 'Show changes in the working tree'
 
@@ -19,11 +16,15 @@ class DiffCommand(Command):
 
 def get_parser():
     parser = argparse.ArgumentParser(
-        description='Show changes in the working tree', prog='vcs diff')
+        description='Show changes in the working tree', prog='vcs diff'
+    )
     group = parser.add_argument_group('"diff" command parameters')
     group.add_argument(
-        '--context', metavar='N', type=int,
-        help='Generate diffs with <n> lines of context')
+        '--context',
+        metavar='N',
+        type=int,
+        help='Generate diffs with <n> lines of context',
+    )
     return parser
 
 

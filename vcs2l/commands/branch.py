@@ -1,14 +1,11 @@
 import argparse
 import sys
 
+from vcs2l.commands.command import Command, simple_main
 from vcs2l.streams import set_streams
-
-from .command import Command
-from .command import simple_main
 
 
 class BranchCommand(Command):
-
     command = 'branch'
     help = 'Show the branches'
 
@@ -19,10 +16,12 @@ class BranchCommand(Command):
 
 def get_parser():
     parser = argparse.ArgumentParser(
-        description='Show the current branch', prog='vcs branch')
+        description='Show the current branch', prog='vcs branch'
+    )
     group = parser.add_argument_group('"branch" command parameters')
     group.add_argument(
-        '--all', action='store_true', default=False, help='Show all branches')
+        '--all', action='store_true', default=False, help='Show all branches'
+    )
     return parser
 
 

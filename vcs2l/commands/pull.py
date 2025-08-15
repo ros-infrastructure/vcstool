@@ -1,14 +1,11 @@
 import argparse
 import sys
 
+from vcs2l.commands.command import Command, simple_main
 from vcs2l.streams import set_streams
-
-from .command import Command
-from .command import simple_main
 
 
 class PullCommand(Command):
-
     command = 'pull'
     help = 'Bring changes from the repository into the working copy'
 
@@ -19,7 +16,8 @@ class PullCommand(Command):
 def get_parser():
     parser = argparse.ArgumentParser(
         description='Bring changes from the repository into the working copy',
-        prog='vcs pull')
+        prog='vcs pull',
+    )
     parser.add_argument_group('"pull" command parameters')
     return parser
 
