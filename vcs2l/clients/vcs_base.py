@@ -1,9 +1,12 @@
 import os
 import socket
 import subprocess
+import sys
 import time
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
+
+from vcs2l.executor import ansi
 
 
 class VcsClientBase(object):
@@ -35,6 +38,13 @@ class VcsClientBase(object):
 
     def _run_command(self, cmd, env=None, retry=0):
         for i in range(retry + 1):
+            if i > 0:
+                print(
+                    ansi('yellowf')
+                    + 'Retrying command (%d/%d): %s' % (i, retry, ' '.join(cmd))
+                    + ansi('reset'),
+                    file=sys.stderr,
+                )
             result = run_command(cmd, os.path.abspath(self.path), env=env)
             if not result['returncode']:
                 # return successful result

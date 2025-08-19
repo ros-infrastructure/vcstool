@@ -325,7 +325,7 @@ class GitClient(VcsClientBase):
             cmd_fetch = [GitClient._executable, 'fetch', remote]
             if command.shallow:
                 result_version_type, version_name = self._check_version_type(
-                    command.url, checkout_version
+                    command.url, checkout_version, command.retry
                 )
                 if result_version_type['returncode']:
                     return result_version_type
@@ -398,7 +398,7 @@ class GitClient(VcsClientBase):
             version_type = None
             if command.version:
                 result_version_type, version_name = self._check_version_type(
-                    command.url, command.version
+                    command.url, command.version, command.retry
                 )
                 if result_version_type['returncode']:
                     return result_version_type
@@ -523,7 +523,7 @@ class GitClient(VcsClientBase):
             'returncode': 0 if remote_urls else 1,
         }
 
-    def _check_version_type(self, url, version):
+    def _check_version_type(self, url, version, retry=0):
         # check if version starts with heads/ or tags/
         prefixes = {
             'heads/': 'branch',
@@ -540,7 +540,7 @@ class GitClient(VcsClientBase):
                 }, version[len(prefix) :]
 
         cmd = [GitClient._executable, 'ls-remote', url, version]
-        result = self._run_command(cmd)
+        result = self._run_command(cmd, retry=retry)
         if result['returncode']:
             result['output'] = (
                 'Could not determine ref type of version: ' + result['output']
