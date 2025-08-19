@@ -1,16 +1,13 @@
-from io import BytesIO
 import os
 import tarfile
+from io import BytesIO
 from urllib.error import URLError
 
-from .vcs_base import load_url
-from .vcs_base import test_url
-from .vcs_base import VcsClientBase
-from ..util import rmtree
+from vcs2l.clients.vcs_base import VcsClientBase, load_url, test_url
+from vcs2l.util import rmtree
 
 
 class TarClient(VcsClientBase):
-
     type = 'tar'
 
     @staticmethod
@@ -26,7 +23,7 @@ class TarClient(VcsClientBase):
                 'cmd': '',
                 'cwd': self.path,
                 'output': "Repository data lacks the 'url' value",
-                'returncode': 1
+                'returncode': 1,
             }
 
         # clear destination
@@ -49,9 +46,8 @@ class TarClient(VcsClientBase):
             return {
                 'cmd': '',
                 'cwd': self.path,
-                'output':
-                    "Could not fetch tarball from '%s': %s" % (command.url, e),
-                'returncode': 1
+                'output': "Could not fetch tarball from '%s': %s" % (command.url, e),
+                'returncode': 1,
             }
 
         # unpack tarball into destination
@@ -62,10 +58,9 @@ class TarClient(VcsClientBase):
             return {
                 'cmd': '',
                 'cwd': self.path,
-                'output':
-                    "Failed to read tarball fetched from '%s': %s" %
-                    (command.url, e),
-                'returncode': 1
+                'output': "Failed to read tarball fetched from '%s': %s"
+                % (command.url, e),
+                'returncode': 1,
             }
 
         if not command.version:
@@ -75,8 +70,9 @@ class TarClient(VcsClientBase):
             def get_members(tar, prefix):
                 for tar_info in tar.getmembers():
                     if tar_info.name.startswith(prefix):
-                        tar_info.name = tar_info.name[len(prefix):]
+                        tar_info.name = tar_info.name[len(prefix) :]
                         yield tar_info
+
             prefix = str(command.version) + '/'
             members = get_members(tar, prefix)
         tar.extractall(self.path, members)
@@ -84,9 +80,8 @@ class TarClient(VcsClientBase):
         return {
             'cmd': '',
             'cwd': self.path,
-            'output':
-                "Downloaded tarball from '%s' and unpacked it" % command.url,
-            'returncode': 0
+            'output': "Downloaded tarball from '%s' and unpacked it" % command.url,
+            'returncode': 0,
         }
 
     def validate(self, command):
@@ -95,7 +90,7 @@ class TarClient(VcsClientBase):
                 'cmd': '',
                 'cwd': self.path,
                 'output': "Repository data lacks the 'url' value",
-                'returncode': 1
+                'returncode': 1,
             }
 
         # test url
@@ -105,14 +100,12 @@ class TarClient(VcsClientBase):
             return {
                 'cmd': '',
                 'cwd': self.path,
-                'output':
-                    "Failed to contact tarball url '%s': %s" %
-                    (command.url, e),
-                'returncode': 1
+                'output': "Failed to contact tarball url '%s': %s" % (command.url, e),
+                'returncode': 1,
             }
         return {
             'cmd': 'http HEAD url',
             'cwd': self.path,
             'output': "Tarball url '%s' exists" % command.url,
-            'returncode': None
+            'returncode': None,
         }

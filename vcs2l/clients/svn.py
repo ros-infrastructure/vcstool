@@ -2,11 +2,10 @@ import os
 from shutil import which
 from xml.etree.ElementTree import fromstring
 
-from .vcs_base import VcsClientBase
+from vcs2l.clients.vcs_base import VcsClientBase
 
 
 class SvnClient(VcsClientBase):
-
     type = 'svn'
     _executable = None
 
@@ -20,15 +19,14 @@ class SvnClient(VcsClientBase):
     def branch(self, command):
         if command.all:
             return self._not_applicable(
-                command,
-                message='at least with the option to list all branches')
+                command, message='at least with the option to list all branches'
+            )
 
         self._check_executable()
         cmd_info = [SvnClient._executable, 'info', '--xml']
         result_info = self._run_command(cmd_info)
         if result_info['returncode']:
-            result_info['output'] = \
-                'Could not determine url: ' + result_info['output']
+            result_info['output'] = 'Could not determine url: ' + result_info['output']
             return result_info
         info = result_info['output']
 
@@ -43,23 +41,22 @@ class SvnClient(VcsClientBase):
                 'cmd': '',
                 'cwd': self.path,
                 'output': 'Could not determine url from xml: %s' % e,
-                'returncode': 1
+                'returncode': 1,
             }
 
         if not url.startswith(root_url):
             return {
                 'cmd': '',
                 'cwd': self.path,
-                'output':
-                    "Could not determine url suffix. The root url '%s' is not "
-                    "a prefix of the url '%s'" % (root_url, url),
-                'returncode': 1
+                'output': "Could not determine url suffix. The root url '%s' is not "
+                "a prefix of the url '%s'" % (root_url, url),
+                'returncode': 1,
             }
 
         return {
             'cmd': ' '.join(cmd_info),
             'cwd': self.path,
-            'output': url[len(root_url):],
+            'output': url[len(root_url) :],
             'returncode': 0,
         }
 
@@ -80,8 +77,7 @@ class SvnClient(VcsClientBase):
         cmd_info = [SvnClient._executable, 'info', '--xml']
         result_info = self._run_command(cmd_info)
         if result_info['returncode']:
-            result_info['output'] = \
-                'Could not determine url: ' + result_info['output']
+            result_info['output'] = 'Could not determine url: ' + result_info['output']
             return result_info
         info = result_info['output']
 
@@ -95,7 +91,7 @@ class SvnClient(VcsClientBase):
                 'cmd': '',
                 'cwd': self.path,
                 'output': 'Could not determine url from xml: %s' % e,
-                'returncode': 1
+                'returncode': 1,
             }
 
         export_data = {'url': url}
@@ -106,7 +102,7 @@ class SvnClient(VcsClientBase):
             'cwd': self.path,
             'output': url,
             'returncode': 0,
-            'export_data': export_data
+            'export_data': export_data,
         }
 
     def import_(self, command):
@@ -115,7 +111,7 @@ class SvnClient(VcsClientBase):
                 'cmd': '',
                 'cwd': self.path,
                 'output': "Repository data lacks the 'url' value",
-                'returncode': 1
+                'returncode': 1,
             }
 
         not_exist = self._create_path()
@@ -129,19 +125,25 @@ class SvnClient(VcsClientBase):
             url += '@%s' % command.version
 
         cmd_checkout = [
-            SvnClient._executable, '--non-interactive', 'checkout', url, '.']
+            SvnClient._executable,
+            '--non-interactive',
+            'checkout',
+            url,
+            '.',
+        ]
         result_checkout = self._run_command(cmd_checkout, retry=command.retry)
         if result_checkout['returncode']:
-            result_checkout['output'] = \
-                "Could not checkout repository '%s': %s" % \
-                (command.url, result_checkout['output'])
+            result_checkout['output'] = "Could not checkout repository '%s': %s" % (
+                command.url,
+                result_checkout['output'],
+            )
             return result_checkout
 
         return {
             'cmd': ' '.join(cmd_checkout),
             'cwd': self.path,
             'output': result_checkout['output'],
-            'returncode': 0
+            'returncode': 0,
         }
 
     def log(self, command):
@@ -150,14 +152,14 @@ class SvnClient(VcsClientBase):
                 'cmd': '',
                 'cwd': self.path,
                 'output': 'SvnClient can not determine log since tag',
-                'returncode': NotImplemented
+                'returncode': NotImplemented,
             }
         if command.limit_untagged:
             return {
                 'cmd': '',
                 'cwd': self.path,
                 'output': 'SvnClient can not determine latest tag',
-                'returncode': NotImplemented
+                'returncode': NotImplemented,
             }
         self._check_executable()
         cmd = [SvnClient._executable, 'log']
@@ -179,8 +181,7 @@ class SvnClient(VcsClientBase):
         cmd_info = [SvnClient._executable, 'info', '--xml']
         result_info = self._run_command(cmd_info)
         if result_info['returncode']:
-            result_info['output'] = \
-                'Could not determine url: ' + result_info['output']
+            result_info['output'] = 'Could not determine url: ' + result_info['output']
             return result_info
         info = result_info['output']
 
@@ -193,7 +194,7 @@ class SvnClient(VcsClientBase):
                 'cmd': '',
                 'cwd': self.path,
                 'output': 'Could not determine url from xml: %s' % e,
-                'returncode': 1
+                'returncode': 1,
             }
 
         return {
@@ -216,54 +217,49 @@ class SvnClient(VcsClientBase):
                 'cmd': '',
                 'cwd': self.path,
                 'output': "Repository data lacks the 'url' value",
-                'returncode': 1
+                'returncode': 1,
             }
 
         self._check_executable()
 
         cmd_info_repo = [SvnClient._executable, 'info', command.url]
-        result_info_repo = self._run_command(
-            cmd_info_repo,
-            retry=command.retry)
+        result_info_repo = self._run_command(cmd_info_repo, retry=command.retry)
         if result_info_repo['returncode']:
-            result_info_repo['output'] = \
-                "Failed to contact remote repository '%s': %s" % \
-                (command.url, result_info_repo['output'])
+            result_info_repo['output'] = (
+                "Failed to contact remote repository '%s': %s"
+                % (command.url, result_info_repo['output'])
+            )
             return result_info_repo
 
         if command.version:
             cmd_info_ver = [
-                SvnClient._executable, 'info',
-                command.url + '@' + command.version]
-            result_info_ver = self._run_command(
-                cmd_info_ver,
-                retry=command.retry)
+                SvnClient._executable,
+                'info',
+                command.url + '@' + command.version,
+            ]
+            result_info_ver = self._run_command(cmd_info_ver, retry=command.retry)
 
             if result_info_ver['returncode']:
-                result_info_ver['output'] = \
-                    'Specified version not found on remote repository' + \
-                    "'%s@%s' : %s" % \
-                    (command.url, command.version, result_info_ver['output'])
+                result_info_ver['output'] = (
+                    'Specified version not found on remote repository'
+                    + "'%s@%s' : %s"
+                    % (command.url, command.version, result_info_ver['output'])
+                )
                 return result_info_ver
 
             cmd = result_info_ver['cmd']
-            output = "Found svn repository '%s' with revision '%s'" % \
-                (command.url, command.version)
+            output = "Found svn repository '%s' with revision '%s'" % (
+                command.url,
+                command.version,
+            )
         else:
             cmd = result_info_repo['cmd']
-            output = "Found svn repository '%s' with default branch" % \
-                command.url
+            output = "Found svn repository '%s' with default branch" % command.url
 
-        return {
-            'cmd': cmd,
-            'cwd': self.path,
-            'output': output,
-            'returncode': None
-        }
+        return {'cmd': cmd, 'cwd': self.path, 'output': output, 'returncode': None}
 
     def _check_executable(self):
-        assert SvnClient._executable is not None, \
-            "Could not find 'svn' executable"
+        assert SvnClient._executable is not None, "Could not find 'svn' executable"
 
 
 if not SvnClient._executable:

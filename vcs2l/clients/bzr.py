@@ -2,12 +2,11 @@ import copy
 import os
 from shutil import which
 
-from .vcs_base import VcsClientBase
-from ..util import rmtree
+from vcs2l.clients.vcs_base import VcsClientBase
+from vcs2l.util import rmtree
 
 
 class BzrClient(VcsClientBase):
-
     type = 'bzr'
     _executable = None
 
@@ -21,8 +20,8 @@ class BzrClient(VcsClientBase):
     def branch(self, command):
         if command.all:
             return self._not_applicable(
-                command,
-                message='at least with the option to list all branches')
+                command, message='at least with the option to list all branches'
+            )
 
         self._check_executable()
         return self._get_parent_branch()
@@ -43,7 +42,7 @@ class BzrClient(VcsClientBase):
                 'cmd': '',
                 'cwd': self.path,
                 'output': "Repository data lacks the 'url' value",
-                'returncode': 1
+                'returncode': 1,
             }
 
         self._check_executable()
@@ -58,10 +57,9 @@ class BzrClient(VcsClientBase):
                     return {
                         'cmd': '',
                         'cwd': self.path,
-                        'output':
-                            'Path already exists and contains a different '
-                            'repository',
-                        'returncode': 1
+                        'output': 'Path already exists and contains a different '
+                        'repository',
+                        'returncode': 1,
                     }
                 try:
                     rmtree(self.path)
@@ -84,9 +82,10 @@ class BzrClient(VcsClientBase):
             cmd_branch += [command.url, '.']
             result_branch = self._run_command(cmd_branch, retry=command.retry)
             if result_branch['returncode']:
-                result_branch['output'] = \
-                    "Could not branch repository '%s': %s" % \
-                    (command.url, result_branch['output'])
+                result_branch['output'] = "Could not branch repository '%s': %s" % (
+                    command.url,
+                    result_branch['output'],
+                )
                 return result_branch
             return result_branch
 
@@ -107,17 +106,15 @@ class BzrClient(VcsClientBase):
                     if parts[1] != '?':
                         tag = parts[0]
                 if not tag:
-                    result_tag['output'] = 'Could not determine latest tag',
+                    result_tag['output'] = 'Could not determine latest tag'
                     result_tag['returncode'] = 1
                     return result_tag
             # determine revision number of tag
-            cmd_tag_rev = [
-                BzrClient._executable, 'revno', '--rev', 'tag:' + tag]
+            cmd_tag_rev = [BzrClient._executable, 'revno', '--rev', 'tag:' + tag]
             result_tag_rev = self._run_command(cmd_tag_rev)
             if result_tag_rev['returncode']:
                 if command.limit_tag:
-                    result_tag_rev['output'] = \
-                        "Repository lacks the tag '%s'" % tag
+                    result_tag_rev['output'] = "Repository lacks the tag '%s'" % tag
                 return result_tag_rev
             try:
                 tag_rev = int(result_tag_rev['output'])
@@ -136,14 +133,17 @@ class BzrClient(VcsClientBase):
                 head_rev = result_head_rev['output']
             # output log since nearest tag
             cmd_log = [
-                BzrClient._executable, 'log',
-                '--rev', 'revno:%s..' % str(tag_next_rev)]
+                BzrClient._executable,
+                'log',
+                '--rev',
+                'revno:%s..' % str(tag_next_rev),
+            ]
             if tag_rev == head_rev:
                 return {
                     'cmd': ' '.join(cmd_log),
                     'cwd': self.path,
                     'output': '',
-                    'returncode': 0
+                    'returncode': 0,
                 }
             if command.limit != 0:
                 cmd_log += ['--limit', '%d' % command.limit]
@@ -185,18 +185,17 @@ class BzrClient(VcsClientBase):
         prefix = '  parent branch: '
         for line in result['output'].splitlines():
             if line.startswith(prefix):
-                branch = line[len(prefix):]
+                branch = line[len(prefix) :]
                 break
         if not branch:
-            result['output'] = 'Could not determine parent branch',
+            result['output'] = ('Could not determine parent branch',)
             result['returncode'] = 1
             return result
         result['output'] = branch
         return result
 
     def _check_executable(self):
-        assert BzrClient._executable is not None, \
-            "Could not find 'bzr' executable"
+        assert BzrClient._executable is not None, "Could not find 'bzr' executable"
 
 
 if not BzrClient._executable:

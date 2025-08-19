@@ -1,31 +1,24 @@
 import argparse
 import os
-from shutil import which
 import sys
 import urllib.request as request
+from shutil import which
+
+import yaml
 
 from vcs2l import __version__ as vcs2l_version
 from vcs2l.clients import vcs2l_clients
 from vcs2l.clients.vcs_base import run_command
-from vcs2l.executor import ansi
-from vcs2l.executor import execute_jobs
-from vcs2l.executor import output_repositories
-from vcs2l.executor import output_results
+from vcs2l.commands.command import Command, add_common_arguments
+from vcs2l.executor import ansi, execute_jobs, output_repositories, output_results
 from vcs2l.streams import set_streams
-import yaml
-
-from .command import add_common_arguments
-from .command import Command
 
 
 class ImportCommand(Command):
-
     command = 'import'
     help = 'Import the list of repositories'
 
-    def __init__(
-        self, args, url, version=None, recursive=False, shallow=False
-    ):
+    def __init__(self, args, url, version=None, recursive=False, shallow=False):
         super(ImportCommand, self).__init__(args)
         self.url = url
         self.version = version
@@ -38,28 +31,49 @@ class ImportCommand(Command):
 
 def get_parser():
     parser = argparse.ArgumentParser(
-        description='Import the list of repositories', prog='vcs import')
+        description='Import the list of repositories', prog='vcs import'
+    )
     group = parser.add_argument_group('"import" command parameters')
     group.add_argument(
-        '--input', type=file_or_url_type, default='-',
-        help='Where to read YAML from', metavar='FILE_OR_URL')
+        '--input',
+        type=file_or_url_type,
+        default='-',
+        help='Where to read YAML from',
+        metavar='FILE_OR_URL',
+    )
     group.add_argument(
-        '--force', action='store_true', default=False,
+        '--force',
+        action='store_true',
+        default=False,
         help="Delete existing directories if they don't contain the "
-             'repository being imported')
+        'repository being imported',
+    )
     group.add_argument(
-        '--shallow', action='store_true', default=False,
-        help='Create a shallow clone without a history')
+        '--shallow',
+        action='store_true',
+        default=False,
+        help='Create a shallow clone without a history',
+    )
     group.add_argument(
-        '--recursive', action='store_true', default=False,
-        help='Recurse into submodules')
+        '--recursive',
+        action='store_true',
+        default=False,
+        help='Recurse into submodules',
+    )
     group.add_argument(
-        '--retry', type=int, metavar='N', default=2,
-        help='Retry commands requiring network access N times on failure')
+        '--retry',
+        type=int,
+        metavar='N',
+        default=2,
+        help='Retry commands requiring network access N times on failure',
+    )
     group.add_argument(
-        '--skip-existing', action='store_true', default=False,
+        '--skip-existing',
+        action='store_true',
+        default=False,
         help="Don't overwrite existing directories or change custom checkouts "
-             'in repos using the same URL (but fetch repos with same URL)')
+        'in repos using the same URL (but fetch repos with same URL)',
+    )
 
     return parser
 
@@ -69,8 +83,7 @@ def file_or_url_type(value):
         return argparse.FileType('r')(value)
     # use another user agent to avoid getting a 403 (forbidden) error,
     # since some websites blacklist or block unrecognized user agents
-    return request.Request(
-        value, headers={'User-Agent': 'vcs2l/' + vcs2l_version})
+    return request.Request(value, headers={'User-Agent': 'vcs2l/' + vcs2l_version})
 
 
 def get_repositories(yaml_file):
@@ -97,7 +110,8 @@ def get_repos_in_vcs2l_format(repositories):
     if repositories is None:
         print(
             ansi('yellowf') + 'List of repositories is empty' + ansi('reset'),
-            file=sys.stderr)
+            file=sys.stderr,
+        )
         return repos
     for path in repositories:
         repo = {}
@@ -109,10 +123,14 @@ def get_repos_in_vcs2l_format(repositories):
                 repo['version'] = attributes['version']
         except KeyError as e:
             print(
-                ansi('yellowf') + (
+                ansi('yellowf')
+                + (
                     "Repository '%s' does not provide the necessary "
-                    'information: %s' % (path, e)) + ansi('reset'),
-                file=sys.stderr)
+                    'information: %s' % (path, e)
+                )
+                + ansi('reset'),
+                file=sys.stderr,
+            )
             continue
         repos[path] = repo
     return repos
@@ -129,10 +147,14 @@ def get_repos_in_rosinstall_format(root):
             path = attributes['local-name']
         except KeyError as e:
             print(
-                ansi('yellowf') + (
+                ansi('yellowf')
+                + (
                     'Repository #%d does not provide the necessary '
-                    'information: %s' % (i, e)) + ansi('reset'),
-                file=sys.stderr)
+                    'information: %s' % (i, e)
+                )
+                + ansi('reset'),
+                file=sys.stderr,
+            )
             continue
         try:
             repo['url'] = attributes['uri']
@@ -140,10 +162,14 @@ def get_repos_in_rosinstall_format(root):
                 repo['version'] = attributes['version']
         except KeyError as e:
             print(
-                ansi('yellowf') + (
+                ansi('yellowf')
+                + (
                     "Repository '%s' does not provide the necessary "
-                    'information: %s' % (path, e)) + ansi('reset'),
-                file=sys.stderr)
+                    'information: %s' % (path, e)
+                )
+                + ansi('reset'),
+                file=sys.stderr,
+            )
             continue
         repos[path] = repo
     return repos
@@ -156,22 +182,25 @@ def generate_jobs(repos, args):
         clients = [c for c in vcs2l_clients if c.type == repo['type']]
         if not clients:
             from vcs2l.clients.none import NoneClient
+
             job = {
                 'client': NoneClient(path),
                 'command': None,
                 'cwd': path,
-                'output':
-                    "Repository type '%s' is not supported" % repo['type'],
-                'returncode': NotImplemented
+                'output': "Repository type '%s' is not supported" % repo['type'],
+                'returncode': NotImplemented,
             }
             jobs.append(job)
             continue
 
         client = clients[0](path)
         command = ImportCommand(
-            args, repo['url'],
+            args,
+            repo['url'],
             str(repo['version']) if 'version' in repo else None,
-            recursive=args.recursive, shallow=args.shallow)
+            recursive=args.recursive,
+            shallow=args.shallow,
+        )
         job = {'client': client, 'command': command}
         jobs.append(job)
     return jobs
@@ -196,8 +225,12 @@ def main(args=None, stdout=None, stderr=None):
 
     parser = get_parser()
     add_common_arguments(
-        parser, skip_hide_empty=True, skip_nested=True, path_nargs='?',
-        path_help='Base path to clone repositories to')
+        parser,
+        skip_hide_empty=True,
+        skip_nested=True,
+        path_nargs='?',
+        path_help='Base path to clone repositories to',
+    )
     args = parser.parse_args(args)
     try:
         input_ = args.input
@@ -244,13 +277,14 @@ def main(args=None, stdout=None, stderr=None):
                 print(
                     'At least one hostname (%s) is unknown, switching to a '
                     'single worker to allow interactively answering the ssh '
-                    'question to confirm the fingerprint' % host)
+                    'question to confirm the fingerprint' % host
+                )
                 workers = 1
                 break
 
     results = execute_jobs(
-        jobs, show_progress=True, number_of_workers=workers,
-        debug_jobs=args.debug)
+        jobs, show_progress=True, number_of_workers=workers, debug_jobs=args.debug
+    )
     output_results(results)
 
     any_error = any(r['returncode'] for r in results)

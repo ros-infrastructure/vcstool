@@ -2,20 +2,19 @@ import argparse
 import os
 import sys
 
+from vcs2l.commands.command import Command, add_common_arguments
 from vcs2l.crawler import find_repositories
-from vcs2l.executor import ansi
-from vcs2l.executor import execute_jobs
-from vcs2l.executor import generate_jobs
-from vcs2l.executor import output_repositories
-from vcs2l.executor import output_results
+from vcs2l.executor import (
+    ansi,
+    execute_jobs,
+    generate_jobs,
+    output_repositories,
+    output_results,
+)
 from vcs2l.streams import set_streams
-
-from .command import add_common_arguments
-from .command import Command
 
 
 class ExportCommand(Command):
-
     command = 'export'
     help = 'Export the list of repositories'
 
@@ -27,16 +26,22 @@ class ExportCommand(Command):
 
 def get_parser():
     parser = argparse.ArgumentParser(
-        description='Export the list of repositories', prog='vcs export')
+        description='Export the list of repositories', prog='vcs export'
+    )
     group = parser.add_argument_group('"export" command parameters')
     group_exact = group.add_mutually_exclusive_group()
     group_exact.add_argument(
-        '--exact', action='store_true', default=False,
-        help='Export commit hashes instead of branch names')
+        '--exact',
+        action='store_true',
+        default=False,
+        help='Export commit hashes instead of branch names',
+    )
     group_exact.add_argument(
-        '--exact-with-tags', action='store_true', default=False,
-        help='Export unique tag names or commit hashes instead of branch '
-             'names')
+        '--exact-with-tags',
+        action='store_true',
+        default=False,
+        help='Export unique tag names or commit hashes instead of branch names',
+    )
     return parser
 
 
@@ -56,12 +61,19 @@ def output_export_data(result, hide_empty=False):
         print('\n'.join(lines))
     except KeyError as e:
         print(
-            ansi('redf') + (
-                "Command '%s' failed for path '%s': %s: %s" % (
+            ansi('redf')
+            + (
+                "Command '%s' failed for path '%s': %s: %s"
+                % (
                     result['command'].__class__.command,
-                    result['client'].path, e.__class__.__name__, e)) +
-            ansi('reset'),
-            file=sys.stderr)
+                    result['client'].path,
+                    e.__class__.__name__,
+                    e,
+                )
+            )
+            + ansi('reset'),
+            file=sys.stderr,
+        )
 
 
 def output_error_information(result, hide_empty=False):

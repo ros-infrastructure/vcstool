@@ -6,7 +6,6 @@ from vcs2l.commands import vcs2l_commands
 from vcs2l.errors import UnsupportedPythonVersionError
 from vcs2l.streams import set_streams
 
-
 if sys.version_info >= (3, 8):
     from importlib.metadata import entry_points
 elif sys.version_info >= (3, 7):
@@ -47,8 +46,11 @@ def main(args=None, stdout=None, stderr=None):
         return 0
 
     if ns.commands_descriptions:
-        print('\n'.join(['{}\t{}'.format(cmd.command, cmd.help)
-                         for cmd in vcs2l_commands]))
+        print(
+            '\n'.join(
+                ['{}\t{}'.format(cmd.command, cmd.help) for cmd in vcs2l_commands]
+            )
+        )
         return 0
 
     # output detailed command list
@@ -59,26 +61,45 @@ def main(args=None, stdout=None, stderr=None):
 
 def get_parser(add_help=True):
     parser = argparse.ArgumentParser(
-        prog='vcs', description=_get_description(),
-        epilog=_get_epilog(), add_help=add_help)
+        prog='vcs',
+        description=_get_description(),
+        epilog=_get_epilog(),
+        add_help=add_help,
+    )
     group = parser.add_mutually_exclusive_group()
     group.add_argument(
-        'command', metavar='<command>', nargs='?',
-        help='The available commands: ' + ', '.join(
-            [cmd.command for cmd in vcs2l_commands]))
+        'command',
+        metavar='<command>',
+        nargs='?',
+        help='The available commands: '
+        + ', '.join([cmd.command for cmd in vcs2l_commands]),
+    )
     group.add_argument(
-        '--clients', action='store_true', default=False,
-        help='Show the available VCS clients')
+        '--clients',
+        action='store_true',
+        default=False,
+        help='Show the available VCS clients',
+    )
     group.add_argument(
-        '--commands', action='store_true', default=False,
-        help='Output the available commands for auto-completion')
+        '--commands',
+        action='store_true',
+        default=False,
+        help='Output the available commands for auto-completion',
+    )
     group.add_argument(
-        '--commands-descriptions', action='store_true', default=False,
-        help='Output the available commands along with their descriptions')
+        '--commands-descriptions',
+        action='store_true',
+        default=False,
+        help='Output the available commands along with their descriptions',
+    )
     from vcs2l import __version__
+
     group.add_argument(
-        '--version', action='version', version='%(prog)s ' + __version__,
-        help='Show the vcs2l version')
+        '--version',
+        action='version',
+        version='%(prog)s ' + __version__,
+        help='Show the vcs2l version',
+    )
     return parser
 
 
@@ -88,20 +109,20 @@ def get_entrypoint(command):
     commands = [cmd for cmd in commands if cmd.startswith(command)]
     if len(commands) != 1:
         print(
-            "vcs: '%s' is not a vcs command. See 'vcs help'." % command,
-            file=sys.stderr)
+            "vcs: '%s' is not a vcs command. See 'vcs help'." % command, file=sys.stderr
+        )
         if commands:
             print(
                 '\nDid you mean one of these?\n' + '\n   '.join(commands),
-                file=sys.stderr)
+                file=sys.stderr,
+            )
         return None
 
     ep_name = 'vcs-' + commands[0]
 
     if sys.version_info >= (3, 10):
         eps = entry_points()
-        entry_point = next(iter(
-            eps.select(group='console_scripts', name=ep_name)))
+        entry_point = next(iter(eps.select(group='console_scripts', name=ep_name)))
         if entry_point:
             return entry_point.load()
 
@@ -112,8 +133,7 @@ def get_entrypoint(command):
                 return ep.load()
 
     elif sys.version_info >= (3, 5):
-        return load_entry_point(
-            'vcs2l', 'console_scripts', ep_name)
+        return load_entry_point('vcs2l', 'console_scripts', ep_name)
 
     else:
         raise UnsupportedPythonVersionError()
@@ -123,27 +143,30 @@ def get_entrypoint(command):
 
 def get_parser_with_command_only():
     parser = argparse.ArgumentParser(
-        prog='vcs', usage='%(prog)s <command>',
+        prog='vcs',
+        usage='%(prog)s <command>',
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        description='%s\n\n%s' % (
-            _get_description(),
-            '\n'.join(_get_command_help(vcs2l_commands))),
-        epilog=_get_epilog(), add_help=False)
+        description='%s\n\n%s'
+        % (_get_description(), '\n'.join(_get_command_help(vcs2l_commands))),
+        epilog=_get_epilog(),
+        add_help=False,
+    )
     parser.add_argument('command', help=argparse.SUPPRESS)
     return parser
 
 
 def _get_description():
-    return 'Most commands take directory arguments, ' \
-        'recursively searching for repositories\n' \
-        'in these directories.  ' \
-        'If no arguments are supplied to a command, it recurses\n' \
+    return (
+        'Most commands take directory arguments, '
+        'recursively searching for repositories\n'
+        'in these directories.  '
+        'If no arguments are supplied to a command, it recurses\n'
         'on the current directory (inclusive) by default.'
+    )
 
 
 def _get_epilog():
-    return "See '%(prog)s <command> --help' for more information " \
-        'on a specific command.'
+    return "See '%(prog)s <command> --help' for more information on a specific command."
 
 
 def _get_command_help(commands):
@@ -151,8 +174,8 @@ def _get_command_help(commands):
     max_len = max(len(cmd.command) for cmd in commands)
     for cmd in vcs2l_commands:
         lines.append(
-            '   %s%s   %s' %
-            (cmd.command, ' ' * (max_len - len(cmd.command)), cmd.help))
+            '   %s%s   %s' % (cmd.command, ' ' * (max_len - len(cmd.command)), cmd.help)
+        )
     return lines
 
 

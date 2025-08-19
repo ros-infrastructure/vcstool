@@ -1,0 +1,8 @@
+[lint]
+select = [
+    'F',  # Pyflakes
+    'I',  # isort
+]
+
+[format]
+quote-style = 'single'

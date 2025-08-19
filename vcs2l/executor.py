@@ -1,9 +1,9 @@
 import logging
 import os
-from queue import Empty, Queue
 import sys
 import threading
 import traceback
+from queue import Empty, Queue
 
 logger = logging.getLogger(__name__)
 logging.basicConfig()
@@ -12,8 +12,7 @@ logging.basicConfig()
 # Detect special Windows shells that do not support mixes of
 # backslashes & forward slashes; for those shells, we want to
 # output POSIX paths, i.e. forward slashes only
-windows_force_posix = \
-    sys.platform == 'win32' and '/' in os.environ.get('_', '')
+windows_force_posix = sys.platform == 'win32' and '/' in os.environ.get('_', '')
 
 
 def fix_output_path(path):
@@ -22,12 +21,11 @@ def fix_output_path(path):
 
 def output_repositories(clients):
     from vcs2l.streams import stdout
+
     ordered_clients = {client.path: client for client in clients}
     for k in sorted(ordered_clients.keys()):
         client = ordered_clients[k]
-        print(
-            '%s (%s)' % (fix_output_path(k), client.__class__.type),
-            file=stdout)
+        print('%s (%s)' % (fix_output_path(k), client.__class__.type), file=stdout)
 
 
 def generate_jobs(clients, command):
@@ -46,8 +44,9 @@ def generate_jobs(clients, command):
             method_name = command.__class__.command
             method = getattr(client, method_name, None)
             if method is not None:
-                setattr(client, method_name, DuplicateCommandHandler(
-                    client, duplicate_path))
+                setattr(
+                    client, method_name, DuplicateCommandHandler(client, duplicate_path)
+                )
 
         job = {'client': client, 'command': command}
         jobs.append(job)
@@ -55,7 +54,6 @@ def generate_jobs(clients, command):
 
 
 class DuplicateCommandHandler(object):
-
     def __init__(self, client, duplicate_path):
         self.client = client
         self.duplicate_path = duplicate_path
@@ -65,7 +63,7 @@ class DuplicateCommandHandler(object):
             'cmd': '',
             'cwd': self.client.path,
             'output': "Same repository as '%s'" % self.duplicate_path,
-            'returncode': None
+            'returncode': None,
         }
 
 
@@ -77,10 +75,9 @@ def get_ready_job(jobs):
     return None
 
 
-def execute_jobs(
-    jobs, show_progress=False, number_of_workers=10, debug_jobs=False
-):
+def execute_jobs(jobs, show_progress=False, number_of_workers=10, debug_jobs=False):
     from vcs2l.streams import stdout
+
     if debug_jobs:
         logger.setLevel(logging.DEBUG)
 
@@ -154,7 +151,6 @@ def execute_jobs(
 
 
 class Worker(threading.Thread):
-
     def __init__(self, job_queue, result_queue):
         super(Worker, self).__init__()
         self.daemon = True
@@ -178,26 +174,22 @@ class Worker(threading.Thread):
     def process_job(self, job):
         command = job['command']
         if not command:
-            return {
-                'cmd': '',
-                'job': job,
-                'output': job['output'],
-                'returncode': 1
-            }
+            return {'cmd': '', 'job': job, 'output': job['output'], 'returncode': 1}
         method_name = command.__class__.command
         try:
             method = getattr(job['client'], method_name, None)
             if method is None:
                 return {
-                    'cmd': '%s.%s(%s)' % (
-                        job['client'].__class__.type, method_name,
-                        job['command'].__class__.command),
+                    'cmd': '%s.%s(%s)'
+                    % (
+                        job['client'].__class__.type,
+                        method_name,
+                        job['command'].__class__.command,
+                    ),
                     'job': job,
-                    'output':
-                        "Command '%s' not implemented for client '%s'" % (
-                            job['command'].__class__.command,
-                            job['client'].__class__.type),
-                    'returncode': NotImplemented
+                    'output': "Command '%s' not implemented for client '%s'"
+                    % (job['command'].__class__.command, job['client'].__class__.type),
+                    'returncode': NotImplemented,
                 }
             result = method(job['command'])
             result['job'] = job
@@ -206,22 +198,30 @@ class Worker(threading.Thread):
             exc_tb = sys.exc_info()[2]
             filename, lineno, _, _ = traceback.extract_tb(exc_tb)[-1]
             return {
-                'cmd': '%s.%s(%s)' % (
-                    job['client'].__class__.type, method_name,
-                    job['command'].__class__.command),
+                'cmd': '%s.%s(%s)'
+                % (
+                    job['client'].__class__.type,
+                    method_name,
+                    job['command'].__class__.command,
+                ),
                 'job': job,
-                'output':
-                    "Invocation of command '%s' on client '%s' failed: "
-                    '%s: %s (%s:%s)' % (
-                        job['command'].__class__.command,
-                        job['client'].__class__.type,
-                        type(e).__name__, e, filename, lineno),
-                'returncode': 1
+                'output': "Invocation of command '%s' on client '%s' failed: "
+                '%s: %s (%s:%s)'
+                % (
+                    job['command'].__class__.command,
+                    job['client'].__class__.type,
+                    type(e).__name__,
+                    e,
+                    filename,
+                    lineno,
+                ),
+                'returncode': 1,
             }
 
 
 def output_result(result, hide_empty=False):
     from vcs2l.streams import stdout
+
     output = result['output']
     if hide_empty and result['returncode'] is None:
         output = ''
@@ -238,23 +238,27 @@ def output_result(result, hide_empty=False):
     if output or not hide_empty:
         client = result['client']
         print(
-            ansi('bluef') + '=== ' +
-            ansi('boldon') + fix_output_path(client.path) + ansi('boldoff') +
-            ' (' + client.__class__.type + ') ===' + ansi('reset'),
-            file=stdout)
+            ansi('bluef')
+            + '=== '
+            + ansi('boldon')
+            + fix_output_path(client.path)
+            + ansi('boldoff')
+            + ' ('
+            + client.__class__.type
+            + ') ==='
+            + ansi('reset'),
+            file=stdout,
+        )
     if output:
         try:
             print(output, file=stdout)
         except UnicodeEncodeError:
-            print(
-                output.encode(sys.getdefaultencoding(), 'replace'),
-                file=stdout)
+            print(output.encode(sys.getdefaultencoding(), 'replace'), file=stdout)
 
 
 def output_results(results, output_handler=output_result, hide_empty=False):
     # output results in alphabetic order
-    path_to_idx = {
-        result['client'].path: i for i, result in enumerate(results)}
+    path_to_idx = {result['client'].path: i for i, result in enumerate(results)}
     idxs_in_order = [path_to_idx[path] for path in sorted(path_to_idx.keys())]
     for i in idxs_in_order:
         output_handler(results[i], hide_empty=hide_empty)
