@@ -1,0 +1,6 @@
+repositories:
+  empty_entry:
+  missing_url:
+    type: git
+  missing_type:
+    url: https://github.com/ros-infrastructure/vcs2l.git
