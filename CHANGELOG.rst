@@ -2,6 +2,20 @@
 Changelog for package vcs2l
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.1.3 (2025-08-20)
+------------------
+* Fix: UnboundLocalError: local variable 'version_type' referenced before assignment (`#15 <https://github.com/ros-infrastructure/vcs2l/pull/15>`_)
+* Enabled command retry on vcs import. (`#34 <https://github.com/ros-infrastructure/vcs2l/pull/34>`_)
+* Added support for empty repository entries and improved validation output. (`#35 <https://github.com/ros-infrastructure/vcs2l/pull/35>`_)
+* Add ruff to the pre-commit (`#27 <https://github.com/ros-infrastructure/vcs2l/pull/27>`_)
+* 🛠️ Bump actions/checkout from 4.2.2 to 5.0.0 (`#31 <https://github.com/ros-infrastructure/vcs2l/pull/31>`_)
+* 🛠️ Bump actions/setup-python from 5.5.0 to 5.6.0 (`#32 <https://github.com/ros-infrastructure/vcs2l/pull/32>`_)
+* Add contribution templates (`#23 <https://github.com/ros-infrastructure/vcs2l/pull/23>`_)
+* Restrict push workflow to main branch. (`#30 <https://github.com/ros-infrastructure/vcs2l/pull/30>`_)
+* Add GitHub actions to the dependabot configuration. (`#28 <https://github.com/ros-infrastructure/vcs2l/pull/28>`_)
+* Rename master branch reference to main in tests. (`#29 <https://github.com/ros-infrastructure/vcs2l/pull/29>`_)
+* Contributors: Leander Stephen D'Souza, Stefan Hoffmann, Yuki Furuta.
+
 1.1.2 (2025-08-02)
 ------------------
 * Configuration updates for stdeb release to bootstrap repository. (`#25 <https://github.com/ros-infrastructure/vcs2l/pull/25>`_)
