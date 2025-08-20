@@ -123,6 +123,7 @@ def main(args=None, stdout=None, stderr=None):
             else:
                 result['path'] = os.path.join(basename, result['path'])
 
+    print('---')
     print('repositories:')
     output_results(results, output_handler=output_export_data)
     output_results(results, output_handler=output_error_information)

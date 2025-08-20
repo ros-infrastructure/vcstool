@@ -1,3 +1,4 @@
+---
 repositories:
   hash:
     type: git
