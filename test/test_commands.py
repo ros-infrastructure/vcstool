@@ -14,6 +14,7 @@ file_uri_scheme = 'file://' if sys.platform != 'win32' else 'file:///'
 REPOS_FILE = os.path.join(os.path.dirname(__file__), 'list.repos')
 REPOS_FILE_URL = file_uri_scheme + REPOS_FILE
 REPOS2_FILE = os.path.join(os.path.dirname(__file__), 'list2.repos')
+BAD_REPOS_FILE = os.path.join(os.path.dirname(__file__), 'bad.repos')
 TEST_WORKSPACE = os.path.join(
     os.path.dirname(os.path.dirname(__file__)), 'test_workspace'
 )
@@ -335,6 +336,10 @@ invocation.
 
         output = run_command('validate', ['--hide-empty', '--input', REPOS_FILE])
         expected = get_expected_output('validate_hide')
+        self.assertEqual(output, expected)
+
+        output = run_command('validate', ['--input', BAD_REPOS_FILE])
+        expected = get_expected_output('validate_bad')
         self.assertEqual(output, expected)
 
     @unittest.skipIf(CI, 'Cannot run on CI')

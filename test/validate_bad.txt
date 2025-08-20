@@ -1,0 +1,3 @@
+Repository 'empty_entry' is empty, skipping
+Repository 'missing_url' does not provide the necessary information: 'url'
+Repository 'missing_type' does not provide the necessary information: 'type'
